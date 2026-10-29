@@ -17,7 +17,7 @@ export function About() {
 
       // Stat counters count up from 0 when scrolled into view.
       rootRef.current?.querySelectorAll<HTMLElement>(".stat-value").forEach((el) => {
-        const target = Number(el.dataset.value ?? "0");
+        const target = Number(el.dataset["value"] ?? "0");
         gsap.fromTo(
           el,
           { innerText: 0 },
