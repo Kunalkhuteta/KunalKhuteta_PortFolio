@@ -99,11 +99,10 @@ export function Tools() {
         const dt = Math.min(now - last, 32);
         last = now;
         Engine.update(engine, dt);
-        chipEls.forEach((el, i) => {
-          const b = bodies[i];
-          el.style.transform = `translate(${b.position.x - el.offsetWidth / 2}px, ${
-            b.position.y - el.offsetHeight / 2
-          }px) rotate(${b.angle}rad)`;
+        pairs.forEach(({ el, body }) => {
+          el.style.transform = `translate(${body.position.x - el.offsetWidth / 2}px, ${
+            body.position.y - el.offsetHeight / 2
+          }px) rotate(${body.angle}rad)`;
         });
         raf = requestAnimationFrame(tick);
       };
