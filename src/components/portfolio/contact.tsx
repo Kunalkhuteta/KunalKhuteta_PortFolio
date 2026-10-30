@@ -49,8 +49,9 @@ export function Contact() {
     const el = terminalRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
           setInView(true);
           io.disconnect();
         }

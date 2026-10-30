@@ -41,18 +41,20 @@ export function Tools() {
 
       const chipEls = chipRefs.current.filter(Boolean) as HTMLButtonElement[];
 
-      const bodies = chipEls.map((el, i) => {
+      const pairs = chipEls.map((el, i) => {
         const w = el.offsetWidth;
         const h = el.offsetHeight;
         const x = 48 + ((i * 137) % Math.max(1, area.clientWidth - 2 * w - 96)) + w / 2;
         const y = -80 - Math.random() * 420;
-        return Bodies.rectangle(x, y, w, h, {
+        const body = Bodies.rectangle(x, y, w, h, {
           restitution: 0.55,
           friction: 0.35,
           frictionAir: 0.02,
           chamfer: { radius: h / 2 },
         });
+        return { el, body };
       });
+      const bodies = pairs.map((p) => p.body);
 
       const makeWalls = () => {
         const W = area.clientWidth;
@@ -69,8 +71,6 @@ export function Tools() {
 
       // Drag & throw
       const mouse = Mouse.create(area);
-      // Matter hijacks the wheel event; let the page keep scrolling.
-      mouse.element.removeEventListener("wheel", mouse.mousewheel as EventListener);
       const mc = MouseConstraint.create(engine, {
         mouse,
         constraint: { stiffness: 0.2, render: { visible: false } },
