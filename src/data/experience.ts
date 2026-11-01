@@ -7,7 +7,7 @@ export type ExperienceItem = {
   chips: string[];
 };
 
-export const experienceLabel = "03 — Experience path";
+export const experienceLabel = "07 — Experience path";
 export const experienceHeading = {
   normal: "Progress bends.",
   accent: "The craft compounds.",
