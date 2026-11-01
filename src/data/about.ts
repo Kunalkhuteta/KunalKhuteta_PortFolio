@@ -3,7 +3,7 @@ export const about = {
   headingNormal: "One developer.",
   headingAccent: "The complete stack.",
   paragraph:
-    "I move comfortably between Angular and React interfaces, Flutter mobile apps, and C# ASP.NET Core backends, so the whole experience works as one considered system. I learn fast, ship to production, and take full ownership of what I build.",
+    "I'm a full-stack software and mobile developer focused on scalable applications, automation tools and developer infrastructure. I move between Angular and React interfaces, Flutter mobile apps, C# ASP.NET Core and Python/FastAPI backends, and GenAI and agentic AI systems — and I take what I build all the way to production.",
   facts: [
     { label: "Based in", value: "Jaipur, India" },
     { label: "Building", value: "Web / APIs / Mobile apps" },

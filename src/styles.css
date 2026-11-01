@@ -7,6 +7,7 @@
 /*
  * Design system — dark, award-style portfolio.
  * Accent: acid lime. Change --accent below to retheme the whole site.
+ * Secondary glows: violet #7C5CFF and cyan #22D3EE at low opacity.
  */
 
 @theme inline {
@@ -40,6 +41,8 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-violet: var(--violet);
+  --color-cyan: var(--cyan);
 }
 
 :root {
@@ -55,6 +58,10 @@
   /* One accent: acid lime #C6FF3D */
   --accent: oklch(0.92 0.23 128);
   --accent-foreground: oklch(0.18 0.06 128);
+
+  /* Secondary glows */
+  --violet: oklch(0.585 0.21 285);          /* #7C5CFF */
+  --cyan: oklch(0.795 0.125 211);           /* #22D3EE */
 
   --card: var(--surface);
   --card-foreground: var(--foreground);
@@ -123,7 +130,7 @@
   }
 }
 
-/* Outlined display type (hero "DEVELOPER") */
+/* Outlined display type (hero "AI DEVELOPER") */
 @utility text-outline {
   color: transparent;
   -webkit-text-stroke: 1.5px oklch(1 0 0 / 30%);
@@ -145,6 +152,111 @@
     linear-gradient(to right, oklch(1 0 0 / 3.5%) 1px, transparent 1px),
     linear-gradient(to bottom, oklch(1 0 0 / 3.5%) 1px, transparent 1px);
   background-size: 76px 76px;
+}
+
+/* Glass card (sections, labs) */
+@utility glass-card {
+  background: oklch(1 0 0 / 3%);
+  border: 1px solid oklch(1 0 0 / 9%);
+  backdrop-filter: blur(14px);
+}
+
+/* Aurora blobs — layered blurred gradients in the hero */
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(110px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+@keyframes aurora-drift-a {
+  0%, 100% { transform: translate(-12%, -8%) scale(1); }
+  50% { transform: translate(10%, 10%) scale(1.18); }
+}
+@keyframes aurora-drift-b {
+  0%, 100% { transform: translate(10%, 6%) scale(1.1); }
+  50% { transform: translate(-10%, -12%) scale(0.92); }
+}
+@keyframes aurora-drift-c {
+  0%, 100% { transform: translate(0%, 10%) scale(1); }
+  50% { transform: translate(6%, -8%) scale(1.12); }
+}
+.aurora-a { animation: aurora-drift-a 16s ease-in-out infinite; }
+.aurora-b { animation: aurora-drift-b 20s ease-in-out infinite; }
+.aurora-c { animation: aurora-drift-c 24s ease-in-out infinite; }
+
+/* Cursor spotlight in the hero */
+.hero-spotlight {
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 40%),
+    oklch(0.92 0.23 128 / 7%),
+    transparent 65%
+  );
+}
+
+/* Sequential chip glow (systems concept chips, journey visuals) */
+@keyframes chip-glow {
+  0%, 100% { border-color: oklch(1 0 0 / 8%); color: var(--muted-foreground); box-shadow: none; }
+  8%, 14% {
+    border-color: oklch(0.92 0.23 128 / 80%);
+    color: var(--accent);
+    box-shadow: 0 0 18px -4px oklch(0.92 0.23 128 / 55%);
+  }
+}
+.chip-seq {
+  animation: chip-glow 12s ease-in-out infinite;
+}
+
+/* Trophy / gradient visual cards */
+@keyframes sheen {
+  0% { transform: translateX(-120%) skewX(-18deg); }
+  55%, 100% { transform: translateX(240%) skewX(-18deg); }
+}
+.trophy-sheen::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, oklch(1 0 0 / 10%), transparent);
+  animation: sheen 5.5s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.pulse-ring::before,
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid oklch(0.92 0.23 128 / 55%);
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+.pulse-ring::after {
+  animation-delay: 1.2s;
+}
+
+/* Generic rise (journey bars / phone list) */
+@keyframes rise {
+  from { transform: scaleY(0.15); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float-y {
+  animation: float-y 3.4s ease-in-out infinite;
+}
+
+/* Pause helper: applied when a section leaves the viewport */
+.anim-paused *,
+.anim-paused {
+  animation-play-state: paused !important;
 }
 
 /* Infinite marquee */
@@ -196,7 +308,18 @@
   .marquee-track,
   .animate-bounce-soft,
   .animate-pulse-dot,
-  .terminal-caret {
+  .terminal-caret,
+  .chip-seq,
+  .aurora-a,
+  .aurora-b,
+  .aurora-c,
+  .trophy-sheen::after,
+  .animate-float-y {
     animation: none;
+  }
+  .pulse-ring::before,
+  .pulse-ring::after {
+    animation: none;
+    opacity: 0;
   }
 }

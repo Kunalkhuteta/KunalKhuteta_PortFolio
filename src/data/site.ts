@@ -12,24 +12,31 @@ export const site = {
   email: "kunalkhandelwal.dev@gmail.com",
   github: "https://github.com/Kunalkhuteta",
   linkedin: "https://linkedin.com/in/kunal-khandelwal",
-  builtWith: "Built with React + GSAP",
+  builtWith: "Built with React · GSAP · Framer Motion",
   copyright: "© 2026",
 } as const;
 
 export const navLinks = [
-  { label: "About", href: "#about" },
+  { label: "Journey", href: "#journey" },
   { label: "Work", href: "#projects" },
+  { label: "Systems", href: "#systems" },
+  { label: "Lab", href: "#lab" },
   { label: "Experience", href: "#experience" },
-  { label: "Achievements", href: "#achievements" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
 export const hero = {
   smallWords: ["Engineering", "Creativity", "Performance"],
-  headingLine1: "FULL STACK",
-  headingLine2: "DEVELOPER",
+  headingLine1: "FULLSTACK",
+  headingLine2: "AI DEVELOPER",
+  ticker: [
+    "Full-stack web",
+    "Flutter mobile apps",
+    "GenAI & agentic workflows",
+    "Distributed systems & observability",
+  ],
   subtext:
-    "I build scalable applications, automation tools and developer infrastructure where engineering, performance and interaction design meet.",
+    "Full-stack software and mobile application developer building scalable applications, AI-powered automation tools and developer infrastructure — from the UI to the event stream.",
   primaryCta: "Explore work",
   primaryCtaHref: "#projects",
   secondaryCta: "Download résumé",
