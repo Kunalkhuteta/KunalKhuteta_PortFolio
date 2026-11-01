@@ -1,6 +1,8 @@
 /**
  * Replace `live: null` with the real demo URL when available.
- * `github` currently points at the public profile — swap in per-project repos.
+ * Empty URLs hide their buttons entirely — no placeholder badges.
+ * TODO(user): fill in LIVE_DEMO_URL / AI_PLATFORM_REPO_URL /
+ * OBSERVABILITY_REPO_URL / EXTENSION_REPO_URL when ready.
  */
 export type Project = {
   id: string;
@@ -19,7 +21,7 @@ export type Project = {
   tint: number; // hue used for the generated card visual
 };
 
-export const projectsLabel = "02 — Selected work";
+export const projectsLabel = "03 — Selected work";
 export const projectsHeading = {
   normal: "Built to solve.",
   accent: "Designed to stay.",
@@ -43,9 +45,9 @@ export const projects: Project[] = [
       "Real-time execution tracking",
       "Conditional logic, loops and data transformations",
     ],
-    tech: ["React Flow", "React", "Node.js", "Express.js", "FastAPI", "MongoDB", "JWT"],
-    live: null, // TODO: add live demo URL
-    github: "https://github.com/Kunalkhuteta",
+    tech: ["Python", "GenAI", "Agentic AI", "React Flow", "React", "Node.js", "Express.js", "FastAPI", "MongoDB", "JWT"],
+    live: null, // TODO: LIVE_DEMO_URL
+    github: null, // TODO: AI_PLATFORM_REPO_URL
     tint: 128,
   },
   {
@@ -66,7 +68,7 @@ export const projects: Project[] = [
     ],
     tech: ["Python", "eBPF", "React 18", "Redis Streams", "InfluxDB", "PostgreSQL", "Docker", "Kubernetes"],
     live: null,
-    github: "https://github.com/Kunalkhuteta",
+    github: null, // TODO: OBSERVABILITY_REPO_URL
     tint: 200,
   },
   {
@@ -87,7 +89,7 @@ export const projects: Project[] = [
     ],
     tech: ["Manifest V3", "Node.js", "Nodemailer", "Google OAuth 2.0", "Chart.js", "Service Worker"],
     live: null,
-    github: "https://github.com/Kunalkhuteta",
+    github: null, // TODO: EXTENSION_REPO_URL
     tint: 38,
   },
   {
