@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 
-/** Shared section header: mono label + display heading with accent phrase. */
+const EASE = [0.83, 0, 0.17, 1] as const;
+
+/** Masked reveal: label + heading slide up from behind an overflow mask. */
 export function SectionHeader({
   id,
   label,
@@ -16,17 +19,40 @@ export function SectionHeader({
   subtext?: string;
   align?: "left" | "center";
 }) {
+  const reduced = useReducedMotion();
+
+  const reveal = (children: ReactNode, delay: number) =>
+    reduced ? (
+      <>{children}</>
+    ) : (
+      <span className="block overflow-hidden pb-[0.08em]">
+        <motion.span
+          className="block will-change-transform"
+          initial={{ y: "112%" }}
+          whileInView={{ y: "0%" }}
+          viewport={{ once: true, margin: "-48px" }}
+          transition={{ duration: 0.7, ease: EASE, delay }}
+        >
+          {children}
+        </motion.span>
+      </span>
+    );
+
   return (
     <div className={align === "center" ? "text-center" : ""}>
       <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-        {label}
+        {reveal(label, 0)}
       </p>
       <h2
         id={id}
         className="mt-4 font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl"
       >
-        {normal}{" "}
-        <em className="font-display italic text-accent">{accent}</em>
+        {reveal(
+          <>
+            {normal} <em className="font-display italic text-accent">{accent}</em>
+          </>,
+          0.08,
+        )}
       </h2>
       {subtext ? (
         <p
