@@ -93,7 +93,7 @@ function BrowserVisual({ active }: { active: boolean }) {
       }).join(" ");
       if (ref.current) ref.current.setAttribute("points", pts);
       if (frame % 3 === 0) {
-        setBars([b => b, [30, 55, 40, 70]].length ? Array.from({ length: 4 }, () => 24 + Math.random() * 66) : []);
+        setBars(Array.from({ length: 4 }, () => 24 + Math.random() * 66));
       }
     }, 260);
     return () => window.clearInterval(id);
