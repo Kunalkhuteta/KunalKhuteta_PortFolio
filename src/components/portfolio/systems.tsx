@@ -184,12 +184,10 @@ export function Systems() {
   const [reduced, setReduced] = useState(false);
   const { ref, inView } = useInView<HTMLDivElement>(0.2, false);
 
-  // Reading reduced motion once on mount keeps Diagram props stable.
-  useState(() => {
-    if (typeof window !== "undefined") {
-      setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    }
-  });
+  // Read reduced-motion preference once on mount.
+  useEffect(() => {
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }, []);
 
   const tab = systemTabs[tabIndex];
 
