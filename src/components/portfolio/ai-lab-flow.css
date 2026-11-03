@@ -1,0 +1,36 @@
+/* React Flow node styling for the AI lab workflow diagram */
+.wf-node {
+  background: oklch(0.19 0 0);
+  border: 1px solid oklch(1 0 0 / 0.16);
+  border-radius: 12px;
+  color: oklch(0.97 0 0 / 0.9);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 10px 14px;
+  text-transform: uppercase;
+  transition:
+    border-color 0.3s,
+    background 0.3s,
+    box-shadow 0.3s,
+    color 0.3s;
+}
+
+.wf-node.wf-node-lit {
+  border-color: oklch(0.92 0.23 128 / 0.85);
+  background: oklch(0.92 0.23 128 / 0.12);
+  box-shadow: 0 0 18px -4px oklch(0.92 0.23 128 / 0.6);
+  color: oklch(0.92 0.23 128);
+}
+
+.wf-node.wf-node-violet.wf-node-lit {
+  border-color: oklch(0.585 0.21 285 / 0.9);
+  background: oklch(0.585 0.21 285 / 0.14);
+  box-shadow: 0 0 18px -4px oklch(0.585 0.21 285 / 0.6);
+  color: oklch(0.75 0.16 285);
+}
+
+.react-flow__attribution {
+  background: transparent;
+  color: oklch(1 0 0 / 0.35);
+}
