@@ -190,6 +190,8 @@ export function Systems() {
   }, []);
 
   const tab = systemTabs[tabIndex] ?? systemTabs[0]!;
+
+  return (
     <section id="systems" className="relative scroll-mt-24 px-4 py-24 sm:px-6 md:py-32">
       <div ref={ref} className={`mx-auto w-full max-w-7xl ${inView ? "" : "anim-paused"}`}>
         <SectionHeader
