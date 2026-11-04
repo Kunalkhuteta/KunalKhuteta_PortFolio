@@ -189,9 +189,7 @@ export function Systems() {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
-  const tab = systemTabs[tabIndex];
-
-  return (
+  const tab = systemTabs[tabIndex] ?? systemTabs[0]!;
     <section id="systems" className="relative scroll-mt-24 px-4 py-24 sm:px-6 md:py-32">
       <div ref={ref} className={`mx-auto w-full max-w-7xl ${inView ? "" : "anim-paused"}`}>
         <SectionHeader
