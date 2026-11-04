@@ -193,7 +193,7 @@ function ReorderDemo({ active }: { active: boolean }) {
       const j = i + dir;
       if (j < 0 || j >= prev.length) return prev;
       const next = [...prev];
-      [next[i], next[j]] = [next[j], next[i]];
+      [next[i], next[j]] = [next[j]!, next[i]!];
       return next;
     });
   };
