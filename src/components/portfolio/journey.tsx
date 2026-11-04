@@ -510,7 +510,7 @@ export function Journey() {
               <div className="relative min-h-[46vh]">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={journeyPhases[active].id}
+                    key={journeyPhases[active]!.id}
                     initial={{ opacity: 0, y: 32 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -24 }}
@@ -518,7 +518,7 @@ export function Journey() {
                     className="mx-auto max-w-3xl"
                   >
                     <PhaseCard
-                      phase={journeyPhases[active]}
+                      phase={journeyPhases[active]!}
                       index={active}
                       active
                     />
