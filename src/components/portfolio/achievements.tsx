@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ImagePlus } from "lucide-react";
+import { Trophy } from "lucide-react";
 import {
   achievements,
   achievementsHeading,
@@ -13,20 +13,18 @@ import { SectionHeader } from "./section-header";
 
 gsap.registerPlugin(ScrollTrigger);
 
-function PhotoPlaceholder({ label }: { label: string }) {
+/** Animated trophy card standing in for real photos (user will upload later). */
+function TrophyVisual() {
   return (
     <div
       aria-hidden="true"
-      className="flex aspect-[4/3] w-full flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border bg-surface"
+      className="trophy-sheen relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-accent/25"
       style={{
         background:
-          "radial-gradient(80% 80% at 30% 20%, oklch(0.3 0.03 128) 0%, oklch(0.13 0 0) 70%)",
+          "radial-gradient(80% 90% at 25% 15%, oklch(0.92 0.23 128 / 0.3) 0%, oklch(0.22 0.05 128) 48%, oklch(0.12 0 0) 100%)",
       }}
     >
-      <ImagePlus className="h-8 w-8 text-accent/60" />
-      <span className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-        {label}
-      </span>
+      <Trophy className="h-14 w-14 animate-float-y text-accent drop-shadow-[0_0_20px_oklch(0.92_0.23_128/0.75)]" />
     </div>
   );
 }
@@ -79,22 +77,29 @@ export function Achievements() {
             ref={trackRef}
             className="flex snap-x gap-6 overflow-x-auto pb-4 md:overflow-visible md:px-[max(1.5rem,calc((100vw-80rem)/2))]"
           >
-            {achievements.map((a, i) => (
+            {achievements.map((a) => (
               <article
                 key={a.title}
                 className="w-[82vw] shrink-0 snap-center rounded-3xl border border-border bg-surface p-5 sm:w-[26rem] md:w-[30rem]"
               >
-                <PhotoPlaceholder label={`Photo ${i + 1} — add yours`} />
-                <p className="mt-5 font-mono text-xs tracking-[0.3em] text-muted-foreground">
-                  {a.counter}
-                </p>
-                <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
-                  {a.date} · {a.organiser}
-                </p>
+                <TrophyVisual />
+                <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+                  <p className="font-mono text-xs tracking-[0.3em] text-muted-foreground">
+                    {a.counter}
+                  </p>
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/50 bg-accent/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                    <Trophy className="h-3 w-3" aria-hidden="true" /> Winner
+                  </span>
+                </div>
                 <h3 className="mt-3 font-display text-2xl font-bold">{a.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
                   {a.description}
                 </p>
+                {a.organiser ? (
+                  <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-foreground/70">
+                    {a.organiser}
+                  </p>
+                ) : null}
               </article>
             ))}
           </div>

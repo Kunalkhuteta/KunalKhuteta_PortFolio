@@ -78,19 +78,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Kunal Khuteta — Full Stack Developer" },
+      { title: "Kunal Khuteta — Full Stack AI Developer" },
       {
         name: "description",
         content:
-          "Full-stack developer building scalable applications, automation tools and developer infrastructure.",
+          "Full-stack developer building scalable applications, GenAI and agentic automation tools, and developer infrastructure.",
       },
       { name: "author", content: "Kunal Khuteta" },
       { name: "theme-color", content: "#070707" },
-      { property: "og:title", content: "Kunal Khuteta — Full Stack Developer" },
+      { property: "og:title", content: "Kunal Khuteta — Full Stack AI Developer" },
       {
         property: "og:description",
         content:
-          "Full-stack developer building scalable applications, automation tools and developer infrastructure.",
+          "Full-stack developer building scalable applications, GenAI and agentic automation tools, and developer infrastructure.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

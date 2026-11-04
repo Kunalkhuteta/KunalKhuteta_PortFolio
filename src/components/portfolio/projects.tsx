@@ -101,11 +101,7 @@ function ProjectCard({ project, index }: { project: (typeof projects)[number]; i
                 <span className="inline-flex items-center gap-2 rounded-full border border-accent/40 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em] text-accent">
                   ● {project.badge}
                 </span>
-              ) : (
-                <span className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                  ● Demo coming soon
-                </span>
-              )}
+              ) : null}
               {project.github ? (
                 <a
                   href={project.github}
