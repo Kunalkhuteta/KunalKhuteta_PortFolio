@@ -31,9 +31,9 @@ function Diagram({
   tabIndex: number;
   reduced: boolean;
 }) {
-  const tab = systemTabs[tabIndex];
-  const [selected, setSelected] = useState(tab.nodes[0].id);
-  const node = tab.nodes.find((n) => n.id === selected) ?? tab.nodes[0];
+  const tab = systemTabs[tabIndex] ?? systemTabs[0]!;
+  const [selected, setSelected] = useState(tab.nodes[0]!.id);
+  const node = tab.nodes.find((n) => n.id === selected) ?? tab.nodes[0]!;
 
   const activate = (id: string) => setSelected(id);
 

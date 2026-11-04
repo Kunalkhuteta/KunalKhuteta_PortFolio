@@ -239,9 +239,11 @@ function GraphVisual({ active }: { active: boolean }) {
 
   return (
     <svg viewBox="0 0 440 150" aria-hidden="true" className="h-36 w-full sm:h-40" fill="none">
-      {[
-        ["t", "l"], ["l", "c"], ["c", "s"], ["c", "o"],
-      ].map(([a, b]) => {
+      {(
+        [
+          ["t", "l"], ["l", "c"], ["c", "s"], ["c", "o"],
+        ] as const
+      ).map(([a, b]) => {
         const na = nodes.find((n) => n.id === a)!;
         const nb = nodes.find((n) => n.id === b)!;
         const on = lit(a) && lit(b);
