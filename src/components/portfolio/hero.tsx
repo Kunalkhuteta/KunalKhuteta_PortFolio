@@ -49,7 +49,7 @@ function Ticker() {
             key={hero.ticker[index]}
             initial={reduced ? false : { y: 14, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={reduced ? undefined : { y: -14, opacity: 0 }}
+            {...(reduced ? {} : { exit: { y: -14, opacity: 0 } })}
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="absolute inset-0 flex items-center justify-center font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/90 sm:text-xs"
           >

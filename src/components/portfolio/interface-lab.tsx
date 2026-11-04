@@ -319,11 +319,13 @@ function PhoneDemo({ active, reduced }: { active: boolean; reduced: boolean }) {
             key={screen}
             initial={reduced ? false : { y: "100%" }}
             animate={{ y: 0 }}
-            exit={reduced ? undefined : { y: "-100%" }}
+            {...(reduced ? {} : { exit: { y: "-100%" } })}
             transition={{ type: "spring", stiffness: 300, damping: 28 }}
             className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-accent/10"
           >
-            <span className="font-display text-sm font-bold text-accent">{PHONE_SCREENS[screen]}</span>
+            <span className="font-display text-sm font-bold text-accent">
+              {PHONE_SCREENS[screen] ?? ""}
+            </span>
             <span className="h-1.5 w-10 rounded-full bg-accent/50" />
             <span className="h-1.5 w-6 rounded-full bg-accent/30" />
           </motion.div>
