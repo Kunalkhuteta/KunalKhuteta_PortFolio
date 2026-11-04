@@ -52,8 +52,8 @@ function SortingVisual({ active }: { active: boolean }) {
       }
       hi = j;
       hj = j + 1;
-      if (arr[j] > arr[j + 1]) {
-        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+      if (arr[j]! > arr[j + 1]!) {
+        [arr[j], arr[j + 1]] = [arr[j + 1]!, arr[j]!];
       }
       j += 1;
       draw();
@@ -239,9 +239,11 @@ function GraphVisual({ active }: { active: boolean }) {
 
   return (
     <svg viewBox="0 0 440 150" aria-hidden="true" className="h-36 w-full sm:h-40" fill="none">
-      {[
-        ["t", "l"], ["l", "c"], ["c", "s"], ["c", "o"],
-      ].map(([a, b]) => {
+      {(
+        [
+          ["t", "l"], ["l", "c"], ["c", "s"], ["c", "o"],
+        ] as const
+      ).map(([a, b]) => {
         const na = nodes.find((n) => n.id === a)!;
         const nb = nodes.find((n) => n.id === b)!;
         const on = lit(a) && lit(b);
@@ -508,7 +510,7 @@ export function Journey() {
               <div className="relative min-h-[46vh]">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={journeyPhases[active].id}
+                    key={journeyPhases[active]!.id}
                     initial={{ opacity: 0, y: 32 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -24 }}
@@ -516,7 +518,7 @@ export function Journey() {
                     className="mx-auto max-w-3xl"
                   >
                     <PhaseCard
-                      phase={journeyPhases[active]}
+                      phase={journeyPhases[active]!}
                       index={active}
                       active
                     />

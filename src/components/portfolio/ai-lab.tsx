@@ -27,7 +27,10 @@ const NODE_SCHEDULE: Array<[string, number]> = [
   ["output", 3200],
 ];
 
-type DisplayedLog = { text: string; ok?: boolean; start: boolean };
+type DisplayedLog = { text: string; ok?: boolean };
+
+const toLog = (l: { text: string; ok?: boolean }): DisplayedLog =>
+  l.ok ? { text: l.text, ok: true } : { text: l.text };
 
 export function AiLab() {
   const { ref, inView } = useInView<HTMLDivElement>(0.25, false);
@@ -68,7 +71,7 @@ export function AiLab() {
     setLogs([]);
     if (reduced) {
       setLit(new Set(workflowNodes.map((n) => n.id)));
-      setLogs(runLogLines.map((l) => ({ text: l.text, ok: l.ok })));
+      setLogs(runLogLines.map(toLog));
       setRunning(false);
       return;
     }
@@ -81,7 +84,7 @@ export function AiLab() {
     runLogLines.forEach((l) => {
       acc += l.delay;
       timeouts.current.push(
-        window.setTimeout(() => setLogs((prev) => [...prev, { text: l.text, ok: l.ok }]), acc + 250),
+        window.setTimeout(() => setLogs((prev) => [...prev, toLog(l)]), acc + 250),
       );
     });
     timeouts.current.push(window.setTimeout(() => setRunning(false), acc + 700));
@@ -105,7 +108,7 @@ export function AiLab() {
     return () => window.clearInterval(id);
   }, [loopInView, reduced]);
 
-  const step = agentSteps[stepIdx];
+  const step = agentSteps[stepIdx] ?? agentSteps[0]!;
 
   return (
     <section id="lab" className="relative scroll-mt-24 px-4 py-24 sm:px-6 md:py-32">

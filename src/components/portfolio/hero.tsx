@@ -49,7 +49,7 @@ function Ticker() {
             key={hero.ticker[index]}
             initial={reduced ? false : { y: 14, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={reduced ? undefined : { y: -14, opacity: 0 }}
+            {...(reduced ? {} : { exit: { y: -14, opacity: 0 } })}
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="absolute inset-0 flex items-center justify-center font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/90 sm:text-xs"
           >
@@ -135,8 +135,8 @@ function NeuralCanvas() {
 
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i];
-          const b = nodes[j];
+          const a = nodes[i]!;
+          const b = nodes[j]!;
           const dist = Math.hypot(a.x - b.x, a.y - b.y);
           if (dist < LINK) {
             const alpha = (1 - dist / LINK) * 0.32;

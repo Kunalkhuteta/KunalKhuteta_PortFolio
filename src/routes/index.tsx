@@ -5,28 +5,31 @@ import { ScrollProgress } from "@/components/portfolio/scroll-progress";
 import { Navbar } from "@/components/portfolio/navbar";
 import { Hero } from "@/components/portfolio/hero";
 import { About } from "@/components/portfolio/about";
+import { Journey } from "@/components/portfolio/journey";
 import { Projects } from "@/components/portfolio/projects";
+import { Systems } from "@/components/portfolio/systems";
+import { AiLab } from "@/components/portfolio/ai-lab";
+import { InterfaceLab } from "@/components/portfolio/interface-lab";
 import { Experience } from "@/components/portfolio/experience";
 import { Achievements } from "@/components/portfolio/achievements";
 import { Tools } from "@/components/portfolio/tools";
-import { Testimonials } from "@/components/portfolio/testimonials";
 import { Contact } from "@/components/portfolio/contact";
 import { Footer } from "@/components/portfolio/footer";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kunal Khuteta — Full Stack Developer Portfolio" },
+      { title: "Kunal Khuteta — Full Stack AI Developer" },
       {
         name: "description",
         content:
-          "Portfolio of Kunal Khuteta, full-stack developer in Jaipur building web apps, mobile apps, APIs and automation tools.",
+          "Full-stack developer building scalable applications, GenAI and agentic automation tools, and developer infrastructure.",
       },
-      { property: "og:title", content: "Kunal Khuteta — Full Stack Developer Portfolio" },
+      { property: "og:title", content: "Kunal Khuteta — Full Stack AI Developer" },
       {
         property: "og:description",
         content:
-          "Scalable applications, automation tools and developer infrastructure — selected work, experience and achievements.",
+          "Full-stack developer building scalable applications, GenAI and agentic automation tools, and developer infrastructure.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -49,11 +52,14 @@ function Index() {
       <main>
         <Hero />
         <About />
+        <Journey />
         <Projects />
+        <Systems />
+        <AiLab />
+        <InterfaceLab />
         <Experience />
         <Achievements />
         <Tools />
-        <Testimonials />
         <Contact />
       </main>
 

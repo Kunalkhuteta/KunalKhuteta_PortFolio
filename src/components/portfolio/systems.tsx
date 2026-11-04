@@ -31,9 +31,9 @@ function Diagram({
   tabIndex: number;
   reduced: boolean;
 }) {
-  const tab = systemTabs[tabIndex];
-  const [selected, setSelected] = useState(tab.nodes[0].id);
-  const node = tab.nodes.find((n) => n.id === selected) ?? tab.nodes[0];
+  const tab = systemTabs[tabIndex] ?? systemTabs[0]!;
+  const [selected, setSelected] = useState(tab.nodes[0]!.id);
+  const node = tab.nodes.find((n) => n.id === selected) ?? tab.nodes[0]!;
 
   const activate = (id: string) => setSelected(id);
 
@@ -189,7 +189,7 @@ export function Systems() {
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   }, []);
 
-  const tab = systemTabs[tabIndex];
+  const tab = systemTabs[tabIndex] ?? systemTabs[0]!;
 
   return (
     <section id="systems" className="relative scroll-mt-24 px-4 py-24 sm:px-6 md:py-32">
