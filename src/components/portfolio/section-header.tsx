@@ -25,17 +25,23 @@ export function SectionHeader({
     reduced ? (
       <>{children}</>
     ) : (
-      <span className="block overflow-hidden pb-[0.08em]">
+      <motion.span
+        className="block overflow-hidden pb-[0.08em]"
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true, margin: "-48px" }}
+      >
         <motion.span
           className="block will-change-transform"
-          initial={{ y: "112%" }}
-          whileInView={{ y: "0%" }}
-          viewport={{ once: true, margin: "-48px" }}
+          variants={{
+            hidden: { y: "112%" },
+            show: { y: "0%" },
+          }}
           transition={{ duration: 0.7, ease: EASE, delay }}
         >
           {children}
         </motion.span>
-      </span>
+      </motion.span>
     );
 
   return (
