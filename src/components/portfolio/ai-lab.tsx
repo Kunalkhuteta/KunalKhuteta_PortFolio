@@ -51,7 +51,7 @@ export function AiLab() {
   const [stepIdx, setStepIdx] = useState(0);
   const stepRef = useRef<HTMLDivElement>(null);
   const { ref: loopRef, inView: loopInView } = useInView<HTMLDivElement>(0.3, false);
-  const terminalBottomRef = useRef<HTMLDivElement>(null);
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setInteractive(window.matchMedia("(min-width: 768px)").matches);
@@ -69,10 +69,11 @@ export function AiLab() {
     return () => window.clearInterval(id);
   }, [loopInView, reduced]);
 
-  // Auto-scroll terminal to bottom when new logs arrive
+  // Auto-scroll ONLY the internal terminal box (never the window/page!) when new logs arrive
   useEffect(() => {
-    if (terminalBottomRef.current) {
-      terminalBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    const el = terminalContainerRef.current;
+    if (el && logs.length > 0) {
+      el.scrollTop = el.scrollHeight;
     }
   }, [logs]);
 
@@ -87,19 +88,7 @@ export function AiLab() {
   };
 
   /**
-   * Triggers client-side direct download of Kunal's PDF resume.
-   */
-  const triggerDirectDownload = () => {
-    const link = document.createElement("a");
-    link.href = "/resume.pdf";
-    link.download = "Kunal_Khuteta_Resume.pdf";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  /**
-   * Executes the real multi-channel resume dispatch agent workflow.
+   * Executes the real multi-channel resume dispatch agent workflow (email with PDF attached, no local browser download).
    */
   const runWorkflow = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -126,10 +115,10 @@ export function AiLab() {
 
     try {
       // Step 1: Goal Intake & Validation
-      addLog(`▶ [01/06 INTAKE] Goal: Package & dispatch Kunal's resume`, "accent");
+      addLog(`▶ [01/06 INTAKE] Goal: Package & email Kunal's PDF resume`, "accent");
       addLog(`• Target Recipient: ${trimmedEmail}`, "info");
       addLog(
-        `• Active Channels: Email (Direct Relay)${enableWhatsApp ? " + WhatsApp (Staged)" : ""}`,
+        `• Active Channels: Email with PDF Attachment${enableWhatsApp ? " + WhatsApp (Staged)" : ""}`,
         "info",
       );
       await sleep(reduced ? 50 : 350);
@@ -139,7 +128,7 @@ export function AiLab() {
       addLog(`→ [02/06 PLANNER] Parsing recipient domain and routing policy...`, "info");
       await sleep(reduced ? 50 : 400);
       addLog(
-        `✔ [02/06 PLANNER] Recipient verified. Execution plan formulated: [DownloadStream -> SmtpRelay]`,
+        `✔ [02/06 PLANNER] Recipient verified. Execution plan formulated: [MimeAttachPDF -> SmtpRelay]`,
         "success",
       );
 
@@ -149,16 +138,21 @@ export function AiLab() {
       await sleep(reduced ? 50 : 400);
       addLog(`✔ [03/06 ASSET] Staged verified resume binary (PDF 1.4)`, "success");
 
-      // Step 4: Browser Direct Download Stream
-      setLit((prev) => new Set(prev).add("download"));
-      addLog(`→ [04/06 STREAM] Initiating direct browser file download...`, "info");
-      triggerDirectDownload();
-      addLog(`✔ [04/06 STREAM] Browser download triggered: Kunal_Khuteta_Resume.pdf`, "success");
-      await sleep(reduced ? 50 : 450);
+      // Step 4: Attach PDF to Outbound Email Payload
+      setLit((prev) => new Set(prev).add("attach"));
+      addLog(
+        `→ [04/06 ATTACH] Attaching Kunal_Khuteta_Resume.pdf to outbound email payload...`,
+        "info",
+      );
+      await sleep(reduced ? 50 : 400);
+      addLog(
+        `✔ [04/06 ATTACH] PDF resume attached as MIME attachment (Kunal_Khuteta_Resume.pdf)`,
+        "success",
+      );
 
-      // Step 5: Backend Dispatch (Resend API / Gmail SMTP)
+      // Step 5: Backend Dispatch (Gmail SMTP / Resend API)
       setLit((prev) => new Set(prev).add("email"));
-      addLog(`→ [05/06 TRANSMIT] Invoking server dispatch action...`, "info");
+      addLog(`→ [05/06 TRANSMIT] Invoking server dispatch action with PDF attachment...`, "info");
 
       const serverResult = await dispatchResumeAction({
         data: {
@@ -197,10 +191,12 @@ export function AiLab() {
       );
 
       if (serverResult.emailStatus === "sent") {
-        toast.success(`Resume dispatched to ${trimmedEmail}! (Check your inbox & local downloads)`);
+        toast.success(
+          `Resume PDF sent to ${trimmedEmail}! Check your email inbox for the attached resume.`,
+        );
       } else {
         toast.success(
-          `Resume downloaded! Dispatched in live simulation mode (ID: ${serverResult.deliveryId})`,
+          `Email dispatch simulated with PDF attached (ID: ${serverResult.deliveryId})`,
         );
       }
     } catch (err) {
@@ -246,9 +242,9 @@ export function AiLab() {
                 Enter your email to test the autonomous delivery loop
               </h3>
               <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
-                Runs a real pipeline: validates inbox, triggers an instant browser download of{" "}
-                <span className="font-mono text-foreground">resume.pdf</span>, and relays the
-                delivery to your email address.
+                Runs a real pipeline: validates inbox, packages{" "}
+                <span className="font-mono text-foreground">Kunal_Khuteta_Resume.pdf</span> as an
+                email attachment, and dispatches it directly to your inbox.
               </p>
             </div>
 
@@ -308,16 +304,6 @@ export function AiLab() {
                   <span>Deploy Agent & Send</span>
                 </>
               )}
-            </button>
-
-            <button
-              type="button"
-              onClick={triggerDirectDownload}
-              title="Download the resume PDF directly without workflow dispatch"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface/80 px-4 py-3.5 font-mono text-xs uppercase tracking-wider text-muted-foreground transition-colors hover:border-accent hover:text-accent sm:text-sm"
-            >
-              <Download className="h-4 w-4" />
-              <span className="hidden sm:inline">Direct Download</span>
             </button>
           </form>
 
@@ -397,6 +383,7 @@ export function AiLab() {
             </div>
 
             <div
+              ref={terminalContainerRef}
               className="mt-3 flex-1 h-[360px] overflow-y-auto rounded-2xl border border-border bg-background/80 p-4 font-mono text-xs leading-6 sm:h-[400px]"
               aria-live="polite"
             >
@@ -405,7 +392,8 @@ export function AiLab() {
                   <Mail className="h-8 w-8 opacity-30 mb-2" />
                   <p>Enter your email above and click “Deploy Agent & Send”.</p>
                   <p className="mt-1 text-[11px] opacity-70">
-                    The agent will trigger direct download and dispatch the email.
+                    The agent will attach Kunal_Khuteta_Resume.pdf and dispatch the email to your
+                    inbox.
                   </p>
                 </div>
               ) : (
@@ -425,7 +413,6 @@ export function AiLab() {
                   );
                 })
               )}
-              <div ref={terminalBottomRef} />
             </div>
           </div>
         </div>

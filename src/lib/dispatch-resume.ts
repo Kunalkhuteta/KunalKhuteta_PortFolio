@@ -19,6 +19,96 @@ export type DispatchResumeResult = {
 };
 
 /**
+ * Generates an in-memory PDF buffer of Kunal's resume as a fallback
+ * if serverless container filesystem does not bundle public/resume.pdf,
+ * ensuring the email ALWAYS includes the PDF attachment.
+ */
+function buildFallbackResumePdfBuffer(): Buffer {
+  const lines = [
+    "BT",
+    "/F1 20 Tf",
+    "50 760 Td",
+    "(Kunal Khuteta - Full Stack AI Developer) Tj",
+    "0 -24 Td",
+    "/F2 10 Tf",
+    "(Email: kunalkhandelwal.dev@gmail.com | Location: Jaipur, India / Remote) Tj",
+    "0 -14 Td",
+    "(GitHub: https://github.com/Kunalkhuteta | LinkedIn: https://linkedin.com/in/kunal-khandelwal) Tj",
+    "0 -28 Td",
+    "/F1 13 Tf",
+    "(PROFESSIONAL SUMMARY) Tj",
+    "0 -16 Td",
+    "/F2 10 Tf",
+    "(Full-stack software and mobile developer focused on scalable applications, GenAI) Tj",
+    "0 -13 Td",
+    "(and agentic automation tools, and developer infrastructure. Experienced in production) Tj",
+    "0 -13 Td",
+    "(deployments across React, Angular, Flutter, C# ASP.NET Core, FastAPI, and Docker.) Tj",
+    "0 -24 Td",
+    "/F1 13 Tf",
+    "(EXPERIENCE) Tj",
+    "0 -16 Td",
+    "/F1 11 Tf",
+    "(SoftTrade InfoTech - Software Developer \\(Apr 2026 - Present\\)) Tj",
+    "0 -14 Td",
+    "/F2 10 Tf",
+    "(- Architected and deployed production REST APIs in C# ASP.NET Core with Redis caching.) Tj",
+    "0 -13 Td",
+    "(- Built event-driven workflows for real-time sync across accounting and inventory.) Tj",
+    "0 -18 Td",
+    "/F1 11 Tf",
+    "(SoftTrade InfoTech - Angular and Flutter Developer Intern \\(Jan 2026 - Mar 2026\\)) Tj",
+    "0 -14 Td",
+    "/F2 10 Tf",
+    "(- Engineered 50+ Angular UI modules and delivered a production Flutter mobile ERP app.) Tj",
+    "0 -24 Td",
+    "/F1 13 Tf",
+    "(CORE SKILLS & TECHNOLOGIES) Tj",
+    "0 -16 Td",
+    "/F2 10 Tf",
+    "(- Languages: C#, TypeScript, JavaScript, Python, Dart, Java, C++, SQL) Tj",
+    "0 -13 Td",
+    "(- Backend & Cloud: ASP.NET Core, Node.js, Express, FastAPI, Docker, Kubernetes, CI/CD) Tj",
+    "0 -13 Td",
+    "(- Frontend & Mobile: React 19, Angular, Flutter, Tailwind CSS, Radix UI, GSAP) Tj",
+    "0 -13 Td",
+    "(- AI & Agentic: GenAI Workflows, LLM Function Calling, Multi-agent Orchestration) Tj",
+    "0 -13 Td",
+    "(- Databases: PostgreSQL, MongoDB, Redis, InfluxDB) Tj",
+    "0 -24 Td",
+    "/F1 13 Tf",
+    "(ACHIEVEMENTS & MILESTONES) Tj",
+    "0 -16 Td",
+    "/F2 10 Tf",
+    "(- Winner: GDG 15-Hour Hackathon \\(Built working product with 10k+ LOC\\)) Tj",
+    "0 -13 Td",
+    "(- Winner: IPS Business College Hackathon) Tj",
+    "ET",
+  ];
+  const content = lines.join("\n");
+  const streamBuf = Buffer.from(content, "utf-8");
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> >>",
+    `<< /Length ${streamBuf.length} >>\nstream\n${content}\nendstream`,
+  ];
+  let pdf = "%PDF-1.4\n";
+  const offsets: number[] = [];
+  for (let i = 0; i < objects.length; i++) {
+    offsets.push(pdf.length);
+    pdf += `${i + 1} 0 obj\n${objects[i]}\nendobj\n`;
+  }
+  const xrefOffset = pdf.length;
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  for (const off of offsets) {
+    pdf += `${String(off).padStart(10, "0")} 00000 n \n`;
+  }
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+  return Buffer.from(pdf, "utf-8");
+}
+
+/**
  * Server function to dispatch Kunal's resume to the user's provided email.
  * Supports Resend API, Gmail / Custom SMTP via Nodemailer, and safe simulation fallback.
  */
@@ -80,7 +170,7 @@ export const dispatchResumeAction = createServerFn({ method: "POST" })
 
     auditTrail.push(`[VALIDATION] Recipient email verified: ${email}`);
 
-    // Load PDF resume buffer for attachment (looks in multiple candidate paths for Vercel & Render compatibility)
+    // Load PDF resume buffer for attachment (looks in multiple candidate paths + self-generates fallback for serverless environments)
     let pdfBuffer: Buffer | null = null;
     try {
       const fs = await import("node:fs");
@@ -89,16 +179,23 @@ export const dispatchResumeAction = createServerFn({ method: "POST" })
         path.resolve(process.cwd(), "public/resume.pdf"),
         path.resolve(process.cwd(), ".output/public/resume.pdf"),
         path.resolve(process.cwd(), "dist/client/resume.pdf"),
+        path.resolve(process.cwd(), "../public/resume.pdf"),
       ];
       const foundPath = candidates.find((p) => fs.existsSync(p));
       if (foundPath) {
         pdfBuffer = fs.readFileSync(foundPath);
-        auditTrail.push(`[DOC_PKG] Loaded resume.pdf (${pdfBuffer.length} bytes)`);
+        auditTrail.push(`[DOC_PKG] Attached Kunal_Khuteta_Resume.pdf (${pdfBuffer.length} bytes)`);
       } else {
-        auditTrail.push(`[WARN] resume.pdf not found on disk; attachment skipped.`);
+        pdfBuffer = buildFallbackResumePdfBuffer();
+        auditTrail.push(
+          `[DOC_PKG] Generated & attached Kunal_Khuteta_Resume.pdf (${pdfBuffer.length} bytes)`,
+        );
       }
-    } catch (err) {
-      auditTrail.push(`[WARN] File system read failed: ${String(err)}`);
+    } catch {
+      pdfBuffer = buildFallbackResumePdfBuffer();
+      auditTrail.push(
+        `[DOC_PKG] Generated & attached Kunal_Khuteta_Resume.pdf (${pdfBuffer.length} bytes)`,
+      );
     }
 
     const emailSubject = "Kunal Khuteta — Full Stack AI Developer Resume & Portfolio";

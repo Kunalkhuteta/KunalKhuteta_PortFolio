@@ -4,8 +4,8 @@ export const aiLabHeading = {
   accent: "pipelines.",
 };
 export const aiLabSubtext =
-  "Test a live autonomous agent workflow: enter your email below to package my resume, trigger an instant direct browser download, and dispatch an email delivery to your inbox in real time.";
-export const aiLabDemoNote = "Live agent workflow · Download & email dispatch";
+  "Test a live autonomous agent workflow: enter your email below to package my PDF resume and dispatch an automated email delivery with the resume attached directly to your inbox in real time.";
+export const aiLabDemoNote = "Live agent workflow · Automated PDF Email Dispatch";
 
 export type WorkflowNode = {
   id: string;
@@ -20,7 +20,7 @@ export const workflowNodes: WorkflowNode[] = [
   { id: "trigger", label: "Trigger (User Email)", kind: "trigger", x: 0, y: 1 },
   { id: "planner", label: "Agent (Validate & Plan)", kind: "llm", x: 1, y: 1 },
   { id: "package", label: "Package Asset (PDF)", kind: "condition", x: 2, y: 1 },
-  { id: "download", label: "Browser Download", kind: "action", x: 3, y: 0 },
+  { id: "attach", label: "Attach Resume PDF", kind: "action", x: 3, y: 0 },
   { id: "email", label: "Email Dispatch (SMTP/API)", kind: "action", x: 3, y: 1 },
   { id: "whatsapp", label: "WhatsApp Gateway (Staged)", kind: "action", x: 3, y: 2 },
   { id: "audit", label: "Delivery Audit", kind: "output", x: 4, y: 1 },
@@ -29,10 +29,10 @@ export const workflowNodes: WorkflowNode[] = [
 export const workflowEdges: Array<{ source: string; target: string }> = [
   { source: "trigger", target: "planner" },
   { source: "planner", target: "package" },
-  { source: "package", target: "download" },
+  { source: "package", target: "attach" },
   { source: "package", target: "email" },
   { source: "package", target: "whatsapp" },
-  { source: "download", target: "audit" },
+  { source: "attach", target: "audit" },
   { source: "email", target: "audit" },
   { source: "whatsapp", target: "audit" },
 ];
@@ -59,14 +59,15 @@ export const agentSteps: AgentStep[] = [
       "Retrieves Kunal's latest verified PDF resume and stamps unique delivery cryptographic metadata.",
   },
   {
-    id: "download",
-    label: "Browser Stream",
-    detail: "Initiates immediate binary blob download directly to visitor's local filesystem.",
+    id: "attach",
+    label: "MIME Attachment",
+    detail:
+      "Encodes Kunal_Khuteta_Resume.pdf into a base64 MIME payload attached directly to the outbound email.",
   },
   {
     id: "dispatch",
     label: "Email Transmission",
-    detail: "Invokes secure server function to dispatch through Resend REST API or Gmail SMTP.",
+    detail: "Invokes secure server function to dispatch through Gmail SMTP or Resend REST API.",
   },
   {
     id: "audit",

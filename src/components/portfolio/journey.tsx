@@ -460,7 +460,8 @@ export function Journey() {
       const total = rect.height - window.innerHeight;
       const p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
       const n = journeyPhases.length;
-      setActive(Math.min(n - 1, Math.floor(p * n)));
+      const nextIdx = Math.min(n - 1, Math.floor(p * n));
+      setActive((prev) => (prev === nextIdx ? prev : nextIdx));
       if (lineRef.current) lineRef.current.style.transform = `scaleY(${p})`;
       if (orbRef.current) orbRef.current.style.top = `${p * 100}%`;
     };
