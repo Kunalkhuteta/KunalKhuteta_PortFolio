@@ -15,9 +15,7 @@ export function smoothScrollTo(hash: string) {
     return;
   }
   document.querySelector(hash)?.scrollIntoView({
-    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ? "auto"
-      : "smooth",
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
   });
 }
 
@@ -163,7 +161,10 @@ export function Navbar() {
                 }}
                 className="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 font-mono text-xs uppercase tracking-[0.15em]"
               >
-                <span className="h-2 w-2 animate-pulse-dot rounded-full bg-accent" aria-hidden="true" />
+                <span
+                  className="h-2 w-2 animate-pulse-dot rounded-full bg-accent"
+                  aria-hidden="true"
+                />
                 {site.availability}
               </a>
             </div>

@@ -154,7 +154,10 @@ export function Tools() {
           className="relative mt-12 h-[380px] touch-none select-none overflow-hidden rounded-3xl border border-border bg-surface sm:h-[440px]"
           aria-label="Interactive tool chips — drag them around"
         >
-          <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
+          <div
+            className="pointer-events-none absolute inset-0 bg-grid opacity-40"
+            aria-hidden="true"
+          />
           {toolChips.map((t, i) => (
             <button
               key={t}
@@ -181,9 +184,7 @@ export function Tools() {
       <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {toolCategories.map((cat) => (
           <div key={cat.name}>
-            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">
-              {cat.name}
-            </h3>
+            <h3 className="font-mono text-xs uppercase tracking-[0.3em] text-accent">{cat.name}</h3>
             <ul className="mt-4 flex flex-wrap gap-2">
               {cat.items.map((item) => (
                 <li

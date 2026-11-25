@@ -19,7 +19,6 @@ export const site = {
 export const navLinks = [
   { label: "Journey", href: "#journey" },
   { label: "Work", href: "#projects" },
-  { label: "Systems", href: "#systems" },
   { label: "Lab", href: "#lab" },
   { label: "Experience", href: "#experience" },
   { label: "Contact", href: "#contact" },

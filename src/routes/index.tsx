@@ -7,9 +7,7 @@ import { Hero } from "@/components/portfolio/hero";
 import { About } from "@/components/portfolio/about";
 import { Journey } from "@/components/portfolio/journey";
 import { Projects } from "@/components/portfolio/projects";
-import { Systems } from "@/components/portfolio/systems";
 import { AiLab } from "@/components/portfolio/ai-lab";
-import { InterfaceLab } from "@/components/portfolio/interface-lab";
 import { Experience } from "@/components/portfolio/experience";
 import { Achievements } from "@/components/portfolio/achievements";
 import { Tools } from "@/components/portfolio/tools";
@@ -42,7 +40,10 @@ function Index() {
   return (
     <div className="relative min-h-screen bg-background">
       {/* Film grain over the whole page */}
-      <div className="grain pointer-events-none fixed inset-0 z-[85] opacity-[0.05]" aria-hidden="true" />
+      <div
+        className="grain pointer-events-none fixed inset-0 z-[85] opacity-[0.05]"
+        aria-hidden="true"
+      />
 
       <Preloader />
       <CustomCursor />
@@ -54,9 +55,7 @@ function Index() {
         <About />
         <Journey />
         <Projects />
-        <Systems />
         <AiLab />
-        <InterfaceLab />
         <Experience />
         <Achievements />
         <Tools />

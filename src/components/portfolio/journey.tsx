@@ -64,13 +64,7 @@ function SortingVisual({ active }: { active: boolean }) {
   }, [active]);
 
   return (
-    <canvas
-      ref={ref}
-      width={560}
-      height={170}
-      aria-hidden="true"
-      className="h-32 w-full sm:h-40"
-    />
+    <canvas ref={ref} width={560} height={170} aria-hidden="true" className="h-32 w-full sm:h-40" />
   );
 }
 
@@ -100,7 +94,10 @@ function BrowserVisual({ active }: { active: boolean }) {
   }, [active]);
 
   return (
-    <div aria-hidden="true" className="overflow-hidden rounded-xl border border-border bg-background/60">
+    <div
+      aria-hidden="true"
+      className="overflow-hidden rounded-xl border border-border bg-background/60"
+    >
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-2">
         <span className="h-2 w-2 rounded-full bg-accent/70" />
         <span className="h-2 w-2 rounded-full bg-violet/60" />
@@ -207,7 +204,9 @@ function PacketVisual({ active }: { active: boolean }) {
           <span
             key={h}
             className={`w-[26%] rounded-lg border px-2 py-2 text-center font-mono text-[9px] uppercase tracking-[0.12em] transition-colors duration-300 sm:text-[10px] ${
-              k <= idx ? "border-accent/60 bg-accent/10 text-accent" : "border-border bg-surface-raised text-muted-foreground"
+              k <= idx
+                ? "border-accent/60 bg-accent/10 text-accent"
+                : "border-border bg-surface-raised text-muted-foreground"
             }`}
           >
             {h}
@@ -241,7 +240,10 @@ function GraphVisual({ active }: { active: boolean }) {
     <svg viewBox="0 0 440 150" aria-hidden="true" className="h-36 w-full sm:h-40" fill="none">
       {(
         [
-          ["t", "l"], ["l", "c"], ["c", "s"], ["c", "o"],
+          ["t", "l"],
+          ["l", "c"],
+          ["c", "s"],
+          ["c", "o"],
         ] as const
       ).map(([a, b]) => {
         const na = nodes.find((n) => n.id === a)!;
@@ -310,13 +312,20 @@ function LogsVisual({ active }: { active: boolean }) {
     <div aria-hidden="true" className="relative flex gap-3">
       <div className="h-36 flex-1 overflow-hidden rounded-xl border border-border bg-background/70 p-3 font-mono text-[10px] leading-5 sm:text-[11px]">
         {LOG_LINES.slice(0, shown).map((l, k) => (
-          <p key={l} className={l.startsWith("anomaly") ? "text-violet" : l.startsWith("alert") ? "text-accent" : "text-foreground/70"}>
+          <p
+            key={l}
+            className={
+              l.startsWith("anomaly")
+                ? "text-violet"
+                : l.startsWith("alert")
+                  ? "text-accent"
+                  : "text-foreground/70"
+            }
+          >
             {l}
           </p>
         ))}
-        {shown >= LOG_LINES.length + 1 ? (
-          <p className="text-foreground/40">…streaming</p>
-        ) : null}
+        {shown >= LOG_LINES.length + 1 ? <p className="text-foreground/40">…streaming</p> : null}
       </div>
       <div className="w-24 sm:w-28">
         <svg viewBox="0 0 100 60" className="h-20 w-full" fill="none">
@@ -325,11 +334,18 @@ function LogsVisual({ active }: { active: boolean }) {
             stroke="oklch(0.795 0.125 211)"
             strokeWidth="2"
           />
-          <circle cx="70" cy="12" r="3" fill={anomaly ? "oklch(0.92 0.23 128)" : "oklch(0.795 0.125 211)"} />
+          <circle
+            cx="70"
+            cy="12"
+            r="3"
+            fill={anomaly ? "oklch(0.92 0.23 128)" : "oklch(0.795 0.125 211)"}
+          />
         </svg>
         <span
           className={`mt-2 inline-flex rounded-full border px-2 py-1 font-mono text-[9px] uppercase tracking-[0.15em] transition-all duration-300 ${
-            anomaly ? "border-accent/70 bg-accent/10 text-accent" : "border-border text-muted-foreground opacity-50"
+            anomaly
+              ? "border-accent/70 bg-accent/10 text-accent"
+              : "border-border text-muted-foreground opacity-50"
           }`}
         >
           ⚠ alert
@@ -342,7 +358,9 @@ function LogsVisual({ active }: { active: boolean }) {
 function NextVisual({ active }: { active: boolean }) {
   return (
     <div aria-hidden="true" className="flex h-36 items-center justify-center sm:h-40">
-      <span className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 ${active ? "pulse-ring" : ""}`}>
+      <span
+        className={`relative flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 ${active ? "pulse-ring" : ""}`}
+      >
         <span className="font-display text-sm font-bold text-accent">next →</span>
       </span>
     </div>
@@ -372,19 +390,23 @@ function PhaseVisual({ kind, active }: { kind: JourneyVisual; active: boolean })
 /* Phase card                                                          */
 /* ------------------------------------------------------------------ */
 
-function PhaseCard({ phase, index, active }: { phase: JourneyPhase; index: number; active: boolean }) {
+function PhaseCard({
+  phase,
+  index,
+  active,
+}: {
+  phase: JourneyPhase;
+  index: number;
+  active: boolean;
+}) {
   return (
     <article
       className={`glass-card rounded-3xl p-6 transition-all duration-500 sm:p-8 ${
-        active
-          ? "border-accent/40 shadow-[0_0_60px_-30px_oklch(0.92_0.23_128/0.7)]"
-          : ""
+        active ? "border-accent/40 shadow-[0_0_60px_-30px_oklch(0.92_0.23_128/0.7)]" : ""
       }`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">
-          {phase.tag}
-        </p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-accent">{phase.tag}</p>
         <p className="font-mono text-[11px] tracking-[0.3em] text-muted-foreground">
           {String(index + 1).padStart(2, "0")} / {String(journeyPhases.length).padStart(2, "0")}
         </p>
@@ -473,11 +495,8 @@ export function Journey() {
                 subtext={journeySubtext}
               />
               <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted-foreground">
-                Phase{" "}
-                <span className="text-accent">
-                  {String(active + 1).padStart(2, "0")}
-                </span>{" "}
-                / {String(journeyPhases.length).padStart(2, "0")}
+                Phase <span className="text-accent">{String(active + 1).padStart(2, "0")}</span> /{" "}
+                {String(journeyPhases.length).padStart(2, "0")}
               </p>
             </div>
 
@@ -517,11 +536,7 @@ export function Journey() {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                     className="mx-auto max-w-3xl"
                   >
-                    <PhaseCard
-                      phase={journeyPhases[active]!}
-                      index={active}
-                      active
-                    />
+                    <PhaseCard phase={journeyPhases[active]!} index={active} active />
                   </motion.div>
                 </AnimatePresence>
               </div>
@@ -555,7 +570,9 @@ function StackedPhase({ phase, index }: { phase: JourneyPhase; index: number }) 
       <span
         aria-hidden="true"
         className={`absolute -left-[1.9rem] top-6 h-3 w-3 rounded-full border-2 transition-colors duration-300 ${
-          active ? "border-accent bg-accent shadow-[0_0_12px_oklch(0.92_0.23_128/0.8)]" : "border-border bg-background"
+          active
+            ? "border-accent bg-accent shadow-[0_0_12px_oklch(0.92_0.23_128/0.8)]"
+            : "border-border bg-background"
         }`}
       />
       <PhaseCard phase={phase} index={index} active={active} />

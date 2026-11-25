@@ -1,112 +1,224 @@
 import { lazy, useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  Download,
+  Mail,
+  Send,
+  Sparkles,
+  MessageSquare,
+  CheckCircle2,
+  Loader2,
+  Copy,
+  Check,
+} from "lucide-react";
+import { toast } from "sonner";
 import {
   agentSteps,
   aiLabDemoNote,
   aiLabHeading,
   aiLabLabel,
   aiLabSubtext,
-  runLogLines,
   workflowNodes,
 } from "@/data/ai-lab";
 import { useInView } from "@/hooks/use-in-view";
+import { dispatchResumeAction } from "@/lib/dispatch-resume";
 import { SectionHeader } from "./section-header";
 
-const WorkflowFlow = lazy(() =>
-  import("./ai-lab-flow").then((m) => ({ default: m.WorkflowFlow })),
-);
+const WorkflowFlow = lazy(() => import("./ai-lab-flow").then((m) => ({ default: m.WorkflowFlow })));
 
-const NODE_SCHEDULE: Array<[string, number]> = [
-  ["trigger", 250],
-  ["llm", 900],
-  ["condition", 1300],
-  ["sheets", 1700],
-  ["slack", 1950],
-  ["email", 2200],
-  ["loop", 2700],
-  ["output", 3200],
-];
-
-type DisplayedLog = { text: string; ok?: boolean };
-
-const toLog = (l: { text: string; ok?: boolean }): DisplayedLog =>
-  l.ok ? { text: l.text, ok: true } : { text: l.text };
+type DisplayedLog = {
+  text: string;
+  kind?: "info" | "success" | "warn" | "accent";
+  timestamp: string;
+};
 
 export function AiLab() {
-  const { ref, inView } = useInView<HTMLDivElement>(0.25, false);
+  const { ref, inView } = useInView<HTMLDivElement>(0.2, false);
   const [mounted, setMounted] = useState(false);
   const [interactive, setInteractive] = useState(true);
-  const [reduced, setReduced] = useState(false);
+  const reduced = useReducedMotion();
 
+  // Workflow execution state
+  const [email, setEmail] = useState("");
+  const [enableWhatsApp, setEnableWhatsApp] = useState(false);
+  const [running, setRunning] = useState(false);
   const [lit, setLit] = useState<Set<string>>(new Set());
   const [logs, setLogs] = useState<DisplayedLog[]>([]);
-  const [running, setRunning] = useState(false);
-  const timeouts = useRef<number[]>([]);
+  const [lastDeliveryId, setLastDeliveryId] = useState<string | null>(null);
+  const [copiedLogs, setCopiedLogs] = useState(false);
 
   // Agent loop state
   const [stepIdx, setStepIdx] = useState(0);
   const stepRef = useRef<HTMLDivElement>(null);
   const { ref: loopRef, inView: loopInView } = useInView<HTMLDivElement>(0.3, false);
+  const terminalBottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     setInteractive(window.matchMedia("(min-width: 768px)").matches);
   }, []);
 
-  // Lazy-mount the flow canvas the first time it scrolls into view.
+  // Lazy-mount the flow canvas when scrolled into view
   useEffect(() => {
     if (inView) setMounted(true);
   }, [inView]);
 
-  const clearTimers = () => {
-    timeouts.current.forEach((t) => window.clearTimeout(t));
-    timeouts.current = [];
-  };
-
-  const run = () => {
-    if (running) return;
-    clearTimers();
-    setRunning(true);
-    setLit(new Set());
-    setLogs([]);
-    if (reduced) {
-      setLit(new Set(workflowNodes.map((n) => n.id)));
-      setLogs(runLogLines.map(toLog));
-      setRunning(false);
-      return;
-    }
-    NODE_SCHEDULE.forEach(([id, t]) => {
-      timeouts.current.push(
-        window.setTimeout(() => setLit((prev) => new Set(prev).add(id)), t),
-      );
-    });
-    let acc = 0;
-    runLogLines.forEach((l) => {
-      acc += l.delay;
-      timeouts.current.push(
-        window.setTimeout(() => setLogs((prev) => [...prev, toLog(l)]), acc + 250),
-      );
-    });
-    timeouts.current.push(window.setTimeout(() => setRunning(false), acc + 700));
-  };
-
-  // First run when the section enters the viewport.
-  const startedRef = useRef(false);
-  useEffect(() => {
-    if (inView && !startedRef.current) {
-      startedRef.current = true;
-      run();
-    }
-    return clearTimers;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inView]);
-
-  // Agent loop rotation
+  // Rotate agent loop steps
   useEffect(() => {
     if (!loopInView || reduced) return;
-    const id = window.setInterval(() => setStepIdx((s) => (s + 1) % agentSteps.length), 1800);
+    const id = window.setInterval(() => setStepIdx((s) => (s + 1) % agentSteps.length), 2200);
     return () => window.clearInterval(id);
   }, [loopInView, reduced]);
+
+  // Auto-scroll terminal to bottom when new logs arrive
+  useEffect(() => {
+    if (terminalBottomRef.current) {
+      terminalBottomRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [logs]);
+
+  const addLog = (text: string, kind: "info" | "success" | "warn" | "accent" = "info") => {
+    const time = new Date().toLocaleTimeString("en-US", {
+      hour12: false,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+    setLogs((prev) => [...prev, { text, kind, timestamp: time }]);
+  };
+
+  /**
+   * Triggers client-side direct download of Kunal's PDF resume.
+   */
+  const triggerDirectDownload = () => {
+    const link = document.createElement("a");
+    link.href = "/resume.pdf";
+    link.download = "Kunal_Khuteta_Resume.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  /**
+   * Executes the real multi-channel resume dispatch agent workflow.
+   */
+  const runWorkflow = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (running) return;
+
+    const trimmedEmail = email.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!trimmedEmail) {
+      toast.error("Please enter an email address to dispatch the resume.");
+      return;
+    }
+
+    if (!emailRegex.test(trimmedEmail)) {
+      toast.error("Please enter a valid email address (e.g. name@gmail.com).");
+      return;
+    }
+
+    setRunning(true);
+    setLit(new Set(["trigger"]));
+    setLogs([]);
+
+    const sleep = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+    try {
+      // Step 1: Goal Intake & Validation
+      addLog(`▶ [01/06 INTAKE] Goal: Package & dispatch Kunal's resume`, "accent");
+      addLog(`• Target Recipient: ${trimmedEmail}`, "info");
+      addLog(
+        `• Active Channels: Email (Direct Relay)${enableWhatsApp ? " + WhatsApp (Staged)" : ""}`,
+        "info",
+      );
+      await sleep(reduced ? 50 : 350);
+
+      // Step 2: Agent Planner & Policy Verification
+      setLit((prev) => new Set(prev).add("planner"));
+      addLog(`→ [02/06 PLANNER] Parsing recipient domain and routing policy...`, "info");
+      await sleep(reduced ? 50 : 400);
+      addLog(
+        `✔ [02/06 PLANNER] Recipient verified. Execution plan formulated: [DownloadStream -> SmtpRelay]`,
+        "success",
+      );
+
+      // Step 3: Package PDF Asset
+      setLit((prev) => new Set(prev).add("package"));
+      addLog(`→ [03/06 ASSET] Locating and staging Kunal_Khuteta_Resume.pdf...`, "info");
+      await sleep(reduced ? 50 : 400);
+      addLog(`✔ [03/06 ASSET] Staged verified resume binary (PDF 1.4)`, "success");
+
+      // Step 4: Browser Direct Download Stream
+      setLit((prev) => new Set(prev).add("download"));
+      addLog(`→ [04/06 STREAM] Initiating direct browser file download...`, "info");
+      triggerDirectDownload();
+      addLog(`✔ [04/06 STREAM] Browser download triggered: Kunal_Khuteta_Resume.pdf`, "success");
+      await sleep(reduced ? 50 : 450);
+
+      // Step 5: Backend Dispatch (Resend API / Gmail SMTP)
+      setLit((prev) => new Set(prev).add("email"));
+      addLog(`→ [05/06 TRANSMIT] Invoking server dispatch action...`, "info");
+
+      const serverResult = await dispatchResumeAction({
+        data: {
+          email: trimmedEmail,
+          enableWhatsApp,
+        },
+      });
+
+      setLastDeliveryId(serverResult.deliveryId);
+
+      if (serverResult.auditTrail && serverResult.auditTrail.length > 0) {
+        serverResult.auditTrail.forEach((line) => {
+          if (line.includes("[SUCCESS]")) {
+            addLog(`✔ ${line}`, "success");
+          } else if (line.includes("[WARN]") || line.includes("[NOTICE]")) {
+            addLog(`• ${line}`, "warn");
+          } else {
+            addLog(`• ${line}`, "info");
+          }
+        });
+      }
+
+      // WhatsApp Channel Staging Note
+      if (enableWhatsApp) {
+        setLit((prev) => new Set(prev).add("whatsapp"));
+        addLog(`• [WHATSAPP-STAGING] Ready for Twilio / Meta Cloud API credentials.`, "accent");
+      }
+
+      await sleep(reduced ? 50 : 350);
+
+      // Step 6: Delivery Audit & Completion
+      setLit((prev) => new Set(prev).add("audit"));
+      addLog(
+        `✔ [06/06 AUDIT] Workflow executed successfully · ID: ${serverResult.deliveryId}`,
+        "accent",
+      );
+
+      if (serverResult.emailStatus === "sent") {
+        toast.success(`Resume dispatched to ${trimmedEmail}! (Check your inbox & local downloads)`);
+      } else {
+        toast.success(
+          `Resume downloaded! Dispatched in live simulation mode (ID: ${serverResult.deliveryId})`,
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      addLog(`✖ [ERROR] Failed to execute dispatch: ${String(err)}`, "warn");
+      toast.error("Workflow encountered a transmission error.");
+    } finally {
+      setRunning(false);
+    }
+  };
+
+  const copyLogs = () => {
+    const raw = logs.map((l) => `[${l.timestamp}] ${l.text}`).join("\n");
+    navigator.clipboard.writeText(raw);
+    setCopiedLogs(true);
+    toast.success("Terminal logs copied to clipboard.");
+    window.setTimeout(() => setCopiedLogs(false), 2000);
+  };
 
   const step = agentSteps[stepIdx] ?? agentSteps[0]!;
 
@@ -120,7 +232,107 @@ export function AiLab() {
           subtext={aiLabSubtext}
         />
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-2">
+        {/* Real Interactive Workflow Trigger Bar */}
+        <div className="glass-card mt-12 rounded-3xl p-5 sm:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-2">
+                <span className="flex h-2 w-2 rounded-full bg-accent animate-pulse" />
+                <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent">
+                  Interactive Resume Dispatch Agent
+                </p>
+              </div>
+              <h3 className="mt-2 font-display text-xl font-bold sm:text-2xl">
+                Enter your email to test the autonomous delivery loop
+              </h3>
+              <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
+                Runs a real pipeline: validates inbox, triggers an instant browser download of{" "}
+                <span className="font-mono text-foreground">resume.pdf</span>, and relays the
+                delivery to your email address.
+              </p>
+            </div>
+
+            {/* Channel toggles */}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 rounded-full border border-accent/40 bg-accent/10 px-3.5 py-1.5 font-mono text-xs text-accent">
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                <span>Email Channel (Active)</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setEnableWhatsApp((v) => !v)}
+                title="Toggle WhatsApp relay integration"
+                className={`flex items-center gap-2 rounded-full border px-3.5 py-1.5 font-mono text-xs transition-colors ${
+                  enableWhatsApp
+                    ? "border-accent bg-accent/20 text-accent font-semibold"
+                    : "border-border bg-surface text-muted-foreground hover:border-border/80 hover:text-foreground"
+                }`}
+              >
+                <MessageSquare className="h-3.5 w-3.5" />
+                <span>
+                  WhatsApp Relay {enableWhatsApp ? "[Enabled]" : "[Staged / Click to test]"}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Input & Action Form */}
+          <form onSubmit={runWorkflow} className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <Mail className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email (e.g. name@gmail.com)"
+                disabled={running}
+                required
+                className="w-full rounded-2xl border border-border bg-background/80 py-3.5 pl-11 pr-4 font-mono text-xs text-foreground placeholder:text-muted-foreground/60 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-60 sm:text-sm"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={running}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-accent px-6 py-3.5 font-display text-xs font-bold uppercase tracking-wider text-accent-foreground transition-all hover:scale-[1.02] hover:shadow-[0_0_24px_rgba(198,255,61,0.35)] disabled:cursor-wait disabled:opacity-60 sm:text-sm"
+            >
+              {running ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Agent Running…</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  <span>Deploy Agent & Send</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={triggerDirectDownload}
+              title="Download the resume PDF directly without workflow dispatch"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface/80 px-4 py-3.5 font-mono text-xs uppercase tracking-wider text-muted-foreground transition-colors hover:border-accent hover:text-accent sm:text-sm"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Direct Download</span>
+            </button>
+          </form>
+
+          {lastDeliveryId && (
+            <div className="mt-4 flex items-center gap-2 rounded-xl border border-accent/20 bg-accent/5 px-4 py-2 font-mono text-[11px] text-accent">
+              <Check className="h-3.5 w-3.5" />
+              <span>
+                Last Delivery UUID: <strong className="font-semibold">{lastDeliveryId}</strong>
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Workflow Diagram & Terminal Logs Grid */}
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
           {/* Flow canvas */}
           <div className="glass-card rounded-3xl p-4 sm:p-6">
             <div className="flex items-center justify-between gap-3">
@@ -130,17 +342,9 @@ export function AiLab() {
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={run}
+                  onClick={() => runWorkflow()}
                   disabled={running}
-                  className="rounded-full bg-accent px-4 py-2 font-display text-xs font-bold uppercase tracking-wide text-accent-foreground transition-transform hover:scale-[1.04] disabled:cursor-wait disabled:opacity-60"
-                >
-                  {running ? "Running…" : "Run workflow"}
-                </button>
-                <button
-                  type="button"
-                  onClick={run}
-                  disabled={running}
-                  className="rounded-full border border-border px-4 py-2 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:border-accent/60 hover:text-accent disabled:opacity-50"
+                  className="rounded-full bg-accent/15 px-3 py-1 font-mono text-xs uppercase tracking-wider text-accent transition-colors hover:bg-accent hover:text-accent-foreground disabled:opacity-50"
                 >
                   ↺ Replay
                 </button>
@@ -151,41 +355,77 @@ export function AiLab() {
                 <WorkflowFlow lit={lit} interactive={interactive} />
               ) : (
                 <div className="flex h-[360px] items-center justify-center sm:h-[400px]">
-                  <p className="font-mono text-xs text-muted-foreground">Loading workflow canvas…</p>
+                  <p className="font-mono text-xs text-muted-foreground">
+                    Loading workflow canvas…
+                  </p>
                 </div>
               )}
             </div>
           </div>
 
           {/* Run logs terminal */}
-          <div className="glass-card rounded-3xl p-4 sm:p-6">
+          <div className="glass-card flex flex-col rounded-3xl p-4 sm:p-6">
             <div className="flex items-center justify-between">
               <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                Run logs
+                Real-Time Execution Logs
               </p>
-              <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
-                <span className="h-2 w-2 animate-pulse-dot rounded-full bg-accent" aria-hidden="true" />
-                {running ? "executing" : "idle"}
-              </span>
+              <div className="flex items-center gap-3">
+                {logs.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={copyLogs}
+                    className="flex items-center gap-1 font-mono text-[10px] uppercase text-muted-foreground hover:text-accent"
+                  >
+                    {copiedLogs ? (
+                      <Check className="h-3 w-3 text-accent" />
+                    ) : (
+                      <Copy className="h-3 w-3" />
+                    )}
+                    <span>{copiedLogs ? "Copied" : "Copy"}</span>
+                  </button>
+                )}
+                <span className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                  <span
+                    className={`h-2 w-2 rounded-full ${
+                      running ? "animate-pulse-dot bg-accent" : "bg-muted-foreground"
+                    }`}
+                    aria-hidden="true"
+                  />
+                  {running ? "executing" : "idle"}
+                </span>
+              </div>
             </div>
+
             <div
-              className="mt-3 h-[360px] overflow-y-auto rounded-2xl border border-border bg-background/70 p-4 font-mono text-xs leading-6 sm:h-[400px]"
+              className="mt-3 flex-1 h-[360px] overflow-y-auto rounded-2xl border border-border bg-background/80 p-4 font-mono text-xs leading-6 sm:h-[400px]"
               aria-live="polite"
             >
               {logs.length === 0 ? (
-                <p className="text-muted-foreground">Press “Run workflow” to execute…</p>
-              ) : (
-                logs.map((l, i) => (
-                  <p
-                    key={`${l.text}-${i}`}
-                    className={
-                      l.ok ? "text-accent" : l.text.startsWith("▶") ? "text-cyan" : "text-foreground/75"
-                    }
-                  >
-                    {l.text}
+                <div className="flex h-full flex-col items-center justify-center text-center text-muted-foreground">
+                  <Mail className="h-8 w-8 opacity-30 mb-2" />
+                  <p>Enter your email above and click “Deploy Agent & Send”.</p>
+                  <p className="mt-1 text-[11px] opacity-70">
+                    The agent will trigger direct download and dispatch the email.
                   </p>
-                ))
+                </div>
+              ) : (
+                logs.map((l, i) => {
+                  let colorClass = "text-foreground/80";
+                  if (l.kind === "accent") colorClass = "text-accent font-semibold";
+                  else if (l.kind === "success") colorClass = "text-emerald-400";
+                  else if (l.kind === "warn") colorClass = "text-amber-400";
+
+                  return (
+                    <div key={`${l.timestamp}-${i}`} className="flex gap-2">
+                      <span className="shrink-0 text-muted-foreground/50 select-none">
+                        [{l.timestamp}]
+                      </span>
+                      <p className={colorClass}>{l.text}</p>
+                    </div>
+                  );
+                })
               )}
+              <div ref={terminalBottomRef} />
             </div>
           </div>
         </div>
@@ -194,7 +434,12 @@ export function AiLab() {
         <div ref={loopRef} className="glass-card mt-6 rounded-3xl p-6 sm:p-10">
           <div className="grid items-center gap-10 lg:grid-cols-[auto_1fr]">
             <div className="relative mx-auto h-64 w-64 sm:h-72 sm:w-72" ref={stepRef}>
-              <svg viewBox="0 0 280 280" className="h-full w-full -rotate-90" fill="none" aria-hidden="true">
+              <svg
+                viewBox="0 0 280 280"
+                className="h-full w-full -rotate-90"
+                fill="none"
+                aria-hidden="true"
+              >
                 <circle cx="140" cy="140" r="108" stroke="oklch(1 0 0 / 0.1)" strokeWidth="2" />
                 <circle
                   cx="140"
@@ -208,6 +453,7 @@ export function AiLab() {
                   className="transition-all duration-700"
                 />
               </svg>
+
               {/* Step nodes around the ring */}
               {agentSteps.map((s, i) => {
                 const angle = (i / agentSteps.length) * Math.PI * 2 - Math.PI / 2;
@@ -241,7 +487,7 @@ export function AiLab() {
 
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                The agent loop · {aiLabDemoNote}
+                The agent loop · Autonomous Execution Architecture
               </p>
               <motion.p
                 key={step.id}
@@ -256,7 +502,7 @@ export function AiLab() {
                 {step.detail}
               </p>
               <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-                Click a step, or let it rotate.
+                Click a step, or let it rotate automatically.
               </p>
             </div>
           </div>

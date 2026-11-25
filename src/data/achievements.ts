@@ -5,7 +5,7 @@ export type Achievement = {
   description: string;
 };
 
-export const achievementsLabel = "08 — Achievement archive";
+export const achievementsLabel = "06 — Achievement archive";
 export const achievementsHeading = {
   normal: "Proof of progress.",
   accent: "Moments worth keeping.",
@@ -25,7 +25,6 @@ export const achievements: Achievement[] = [
     counter: "02 / 02",
     organiser: "IPS Business College",
     title: "IPS Business College Hackathon — Winner",
-    description:
-      "Recognised for performance in a DSA and web development competition.",
+    description: "Recognised for performance in a DSA and web development competition.",
   },
 ];

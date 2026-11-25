@@ -15,7 +15,7 @@ export function WorkflowFlow({ lit, interactive }: { lit: Set<string>; interacti
     () =>
       workflowNodes.map((n) => ({
         id: n.id,
-        position: { x: n.x * 190, y: n.y * 118 },
+        position: { x: n.x * 200, y: n.y * 125 },
         data: { label: n.label },
         className: `wf-node ${VIOLET_KINDS.has(n.kind) ? "wf-node-violet" : ""} ${
           lit.has(n.id) ? "wf-node-lit" : ""

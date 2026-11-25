@@ -45,7 +45,18 @@ export const projects: Project[] = [
       "Real-time execution tracking",
       "Conditional logic, loops and data transformations",
     ],
-    tech: ["Python", "GenAI", "Agentic AI", "React Flow", "React", "Node.js", "Express.js", "FastAPI", "MongoDB", "JWT"],
+    tech: [
+      "Python",
+      "GenAI",
+      "Agentic AI",
+      "React Flow",
+      "React",
+      "Node.js",
+      "Express.js",
+      "FastAPI",
+      "MongoDB",
+      "JWT",
+    ],
     live: null, // TODO: LIVE_DEMO_URL
     github: null, // TODO: AI_PLATFORM_REPO_URL
     tint: 128,
@@ -66,7 +77,16 @@ export const projects: Project[] = [
       "Rule-based alerting engine with Slack and webhook integrations",
       "ML-based anomaly detection, distributed tracing, RBAC, multi-tenancy, query caching, and Slack/Email/PagerDuty plugins",
     ],
-    tech: ["Python", "eBPF", "React 18", "Redis Streams", "InfluxDB", "PostgreSQL", "Docker", "Kubernetes"],
+    tech: [
+      "Python",
+      "eBPF",
+      "React 18",
+      "Redis Streams",
+      "InfluxDB",
+      "PostgreSQL",
+      "Docker",
+      "Kubernetes",
+    ],
     live: null,
     github: null, // TODO: OBSERVABILITY_REPO_URL
     tint: 200,
@@ -87,7 +107,14 @@ export const projects: Project[] = [
       "Google OAuth 2.0",
       "Chart.js productivity dashboard; backend deployed on Render",
     ],
-    tech: ["Manifest V3", "Node.js", "Nodemailer", "Google OAuth 2.0", "Chart.js", "Service Worker"],
+    tech: [
+      "Manifest V3",
+      "Node.js",
+      "Nodemailer",
+      "Google OAuth 2.0",
+      "Chart.js",
+      "Service Worker",
+    ],
     live: null,
     github: null, // TODO: EXTENSION_REPO_URL
     tint: 38,

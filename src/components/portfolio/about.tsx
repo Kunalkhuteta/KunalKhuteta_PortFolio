@@ -43,9 +43,7 @@ export function About() {
         />
 
         <div className="mt-14 max-w-4xl">
-          <p className="text-lg leading-relaxed text-foreground/90">
-            {about.paragraph}
-          </p>
+          <p className="text-lg leading-relaxed text-foreground/90">{about.paragraph}</p>
 
           <dl className="mt-10 flex flex-wrap gap-10">
             {about.facts.map((fact) => (
@@ -68,9 +66,7 @@ export function About() {
                   </span>
                   <span>{stat.suffix}</span>
                 </p>
-                <p className="mt-3 text-sm leading-snug text-muted-foreground">
-                  {stat.label}
-                </p>
+                <p className="mt-3 text-sm leading-snug text-muted-foreground">{stat.label}</p>
               </div>
             ))}
           </div>

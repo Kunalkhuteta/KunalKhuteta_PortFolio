@@ -63,7 +63,9 @@ export function Footer() {
         </div>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3 font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
-          <p>{site.copyright} {site.name}</p>
+          <p>
+            {site.copyright} {site.name}
+          </p>
           <p>{site.location}</p>
           <p>{site.builtWith}</p>
         </div>

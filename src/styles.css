@@ -49,19 +49,19 @@
   --radius: 0.75rem;
 
   /* Base palette — dark only */
-  --background: oklch(0.11 0 0);            /* #070707 */
-  --surface: oklch(0.155 0 0);              /* #0f0f0f */
+  --background: oklch(0.11 0 0); /* #070707 */
+  --surface: oklch(0.155 0 0); /* #0f0f0f */
   --surface-raised: oklch(0.19 0 0);
-  --foreground: oklch(0.97 0 0);            /* #f2f2f2 */
-  --muted-foreground: oklch(0.64 0 0);      /* #8a8a8a */
+  --foreground: oklch(0.97 0 0); /* #f2f2f2 */
+  --muted-foreground: oklch(0.64 0 0); /* #8a8a8a */
 
   /* One accent: acid lime #C6FF3D */
   --accent: oklch(0.92 0.23 128);
   --accent-foreground: oklch(0.18 0.06 128);
 
   /* Secondary glows */
-  --violet: oklch(0.585 0.21 285);          /* #7C5CFF */
-  --cyan: oklch(0.795 0.125 211);           /* #22D3EE */
+  --violet: oklch(0.585 0.21 285); /* #7C5CFF */
+  --cyan: oklch(0.795 0.125 211); /* #22D3EE */
 
   --card: var(--surface);
   --card-foreground: var(--foreground);
@@ -171,20 +171,41 @@
 }
 
 @keyframes aurora-drift-a {
-  0%, 100% { transform: translate(-12%, -8%) scale(1); }
-  50% { transform: translate(10%, 10%) scale(1.18); }
+  0%,
+  100% {
+    transform: translate(-12%, -8%) scale(1);
+  }
+  50% {
+    transform: translate(10%, 10%) scale(1.18);
+  }
 }
 @keyframes aurora-drift-b {
-  0%, 100% { transform: translate(10%, 6%) scale(1.1); }
-  50% { transform: translate(-10%, -12%) scale(0.92); }
+  0%,
+  100% {
+    transform: translate(10%, 6%) scale(1.1);
+  }
+  50% {
+    transform: translate(-10%, -12%) scale(0.92);
+  }
 }
 @keyframes aurora-drift-c {
-  0%, 100% { transform: translate(0%, 10%) scale(1); }
-  50% { transform: translate(6%, -8%) scale(1.12); }
+  0%,
+  100% {
+    transform: translate(0%, 10%) scale(1);
+  }
+  50% {
+    transform: translate(6%, -8%) scale(1.12);
+  }
 }
-.aurora-a { animation: aurora-drift-a 16s ease-in-out infinite; }
-.aurora-b { animation: aurora-drift-b 20s ease-in-out infinite; }
-.aurora-c { animation: aurora-drift-c 24s ease-in-out infinite; }
+.aurora-a {
+  animation: aurora-drift-a 16s ease-in-out infinite;
+}
+.aurora-b {
+  animation: aurora-drift-b 20s ease-in-out infinite;
+}
+.aurora-c {
+  animation: aurora-drift-c 24s ease-in-out infinite;
+}
 
 /* Cursor spotlight in the hero */
 .hero-spotlight {
@@ -197,8 +218,14 @@
 
 /* Sequential chip glow (systems concept chips, journey visuals) */
 @keyframes chip-glow {
-  0%, 100% { border-color: oklch(1 0 0 / 8%); color: var(--muted-foreground); box-shadow: none; }
-  8%, 14% {
+  0%,
+  100% {
+    border-color: oklch(1 0 0 / 8%);
+    color: var(--muted-foreground);
+    box-shadow: none;
+  }
+  8%,
+  14% {
     border-color: oklch(0.92 0.23 128 / 80%);
     color: var(--accent);
     box-shadow: 0 0 18px -4px oklch(0.92 0.23 128 / 55%);
@@ -210,8 +237,13 @@
 
 /* Trophy / gradient visual cards */
 @keyframes sheen {
-  0% { transform: translateX(-120%) skewX(-18deg); }
-  55%, 100% { transform: translateX(240%) skewX(-18deg); }
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  55%,
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+  }
 }
 .trophy-sheen::after {
   content: "";
@@ -223,8 +255,14 @@
 }
 
 @keyframes pulse-ring {
-  0% { transform: scale(0.85); opacity: 0.8; }
-  100% { transform: scale(1.9); opacity: 0; }
+  0% {
+    transform: scale(0.85);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
 }
 .pulse-ring::before,
 .pulse-ring::after {
@@ -241,13 +279,22 @@
 
 /* Generic rise (journey bars / phone list) */
 @keyframes rise {
-  from { transform: scaleY(0.15); }
-  to { transform: scaleY(1); }
+  from {
+    transform: scaleY(0.15);
+  }
+  to {
+    transform: scaleY(1);
+  }
 }
 
 @keyframes float-y {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 .animate-float-y {
   animation: float-y 3.4s ease-in-out infinite;
@@ -261,8 +308,12 @@
 
 /* Infinite marquee */
 @keyframes marquee-left {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .marquee-track {
@@ -279,8 +330,13 @@
 
 /* Bouncing arrow in the hero bottom strip */
 @keyframes bounce-soft {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(5px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
 }
 .animate-bounce-soft {
   animation: bounce-soft 1.6s ease-in-out infinite;
@@ -288,8 +344,14 @@
 
 /* Terminal caret */
 @keyframes caret-blink {
-  0%, 45% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }
 .terminal-caret {
   animation: caret-blink 1s step-end infinite;
@@ -297,8 +359,15 @@
 
 /* Availability dot pulse */
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.45; transform: scale(0.82); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
 }
 .animate-pulse-dot {
   animation: pulse-dot 2.2s ease-in-out infinite;

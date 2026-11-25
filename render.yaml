@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: kunal-khuteta-portfolio
+    runtime: node
+    plan: free
+    buildCommand: npm install && NITRO_PRESET=node-server npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 22.16.0
+      - key: NITRO_PRESET
+        value: node-server
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        value: Kunal Khuteta <onboarding@resend.dev>
+      - key: GMAIL_USER
+        sync: false
+      - key: GMAIL_APP_PASSWORD
+        sync: false

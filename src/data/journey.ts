@@ -7,13 +7,7 @@ export const journeySubtext =
   "How I learn: pick the hardest useful thing, build it end to end, ship it.";
 
 export type JourneyVisual =
-  | "sorting"
-  | "browser"
-  | "dashboard"
-  | "packet"
-  | "graph"
-  | "logs"
-  | "next";
+  "sorting" | "browser" | "dashboard" | "packet" | "graph" | "logs" | "next";
 
 export type JourneyPhase = {
   id: string;

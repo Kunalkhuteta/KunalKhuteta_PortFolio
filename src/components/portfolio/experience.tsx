@@ -91,8 +91,14 @@ export function Experience() {
                     </p>
                     <ul className="mt-5 space-y-2.5">
                       {item.bullets.map((b) => (
-                        <li key={b} className="flex gap-3 text-sm leading-relaxed text-foreground/85">
-                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                        <li
+                          key={b}
+                          className="flex gap-3 text-sm leading-relaxed text-foreground/85"
+                        >
+                          <span
+                            className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                            aria-hidden="true"
+                          />
                           {b}
                         </li>
                       ))}

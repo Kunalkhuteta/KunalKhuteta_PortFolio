@@ -1,0 +1,84 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >> /F2 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> >> >> >>
+endobj
+4 0 obj
+<< /Length 1779 >>
+stream
+BT
+/F1 20 Tf
+50 760 Td
+(Kunal Khuteta - Full Stack AI Developer) Tj
+0 -24 Td
+/F2 10 Tf
+(Email: kunalkhandelwal.dev@gmail.com | Location: Jaipur, India / Remote) Tj
+0 -14 Td
+(GitHub: https://github.com/Kunalkhuteta | LinkedIn: https://linkedin.com/in/kunal-khandelwal) Tj
+0 -28 Td
+/F1 13 Tf
+(PROFESSIONAL SUMMARY) Tj
+0 -16 Td
+/F2 10 Tf
+(Full-stack software and mobile developer focused on scalable applications, GenAI) Tj
+0 -13 Td
+(and agentic automation tools, and developer infrastructure. Experienced in production) Tj
+0 -13 Td
+(deployments across React, Angular, Flutter, C# ASP.NET Core, FastAPI, and Docker.) Tj
+0 -24 Td
+/F1 13 Tf
+(EXPERIENCE) Tj
+0 -16 Td
+/F1 11 Tf
+(SoftTrade InfoTech - Full Stack Developer \(Apr 2026 - Present\)) Tj
+0 -14 Td
+/F2 10 Tf
+(- Architecting distributed systems, GenAI workflows, and event-driven microservices.) Tj
+0 -13 Td
+(- Building resilient API layers and leading full-stack product deliveries.) Tj
+0 -18 Td
+/F1 11 Tf
+(SoftTrade InfoTech - Software Engineer Intern \(Jan 2026 - Mar 2026\)) Tj
+0 -14 Td
+/F2 10 Tf
+(- Delivered frontend modules in Angular and backend services in ASP.NET Core.) Tj
+0 -24 Td
+/F1 13 Tf
+(CORE SKILLS & TECHNOLOGIES) Tj
+0 -16 Td
+/F2 10 Tf
+(- Languages: C#, TypeScript, JavaScript, Python, Dart, Java, C++, SQL) Tj
+0 -13 Td
+(- Backend & Cloud: ASP.NET Core, Node.js, Express, FastAPI, Docker, Kubernetes, CI/CD) Tj
+0 -13 Td
+(- Frontend & Mobile: React 19, Angular, Flutter, Tailwind CSS, Radix UI, GSAP) Tj
+0 -13 Td
+(- AI & Agentic: GenAI Workflows, LLM Function Calling, Multi-agent Orchestration) Tj
+0 -13 Td
+(- Databases: PostgreSQL, MongoDB, Redis, InfluxDB) Tj
+0 -24 Td
+/F1 13 Tf
+(ACHIEVEMENTS & MILESTONES) Tj
+0 -16 Td
+/F2 10 Tf
+(- Winner: GDG 15-Hour Hackathon \(Built working product with 10k+ LOC\)) Tj
+ET
+endstream
+endobj
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000354 00000 n 
+trailer
+<< /Size 5 /Root 1 0 R >>
+startxref
+2185
+%%EOF

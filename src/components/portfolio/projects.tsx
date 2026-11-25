@@ -1,11 +1,6 @@
 import { ExternalLink, Github } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  projects,
-  projectsHeading,
-  projectsLabel,
-  projectsSubtext,
-} from "@/data/projects";
+import { projects, projectsHeading, projectsLabel, projectsSubtext } from "@/data/projects";
 import { site } from "@/data/site";
 import { Section, SectionHeader } from "./section-header";
 
@@ -70,7 +65,10 @@ function ProjectCard({ project, index }: { project: (typeof projects)[number]; i
             <ul className="mt-6 space-y-2.5">
               {project.highlights.map((h) => (
                 <li key={h} className="flex gap-3 text-sm leading-relaxed text-foreground/85">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                  <span
+                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
+                    aria-hidden="true"
+                  />
                   {h}
                 </li>
               ))}

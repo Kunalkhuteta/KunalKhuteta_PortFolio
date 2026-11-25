@@ -27,10 +27,7 @@ function Ticker() {
 
   useEffect(() => {
     if (reduced) return;
-    const id = window.setInterval(
-      () => setIndex((i) => (i + 1) % hero.ticker.length),
-      2600,
-    );
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % hero.ticker.length), 2600);
     return () => window.clearInterval(id);
   }, [reduced]);
 
@@ -39,10 +36,7 @@ function Ticker() {
       className="relative z-10 mx-auto mt-3 flex w-fit items-center gap-2 rounded-full border border-border bg-surface/50 px-4 py-1.5 backdrop-blur-sm"
       aria-live="polite"
     >
-      <span
-        className="h-1.5 w-1.5 rounded-full bg-accent"
-        aria-hidden="true"
-      />
+      <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
       <span className="relative h-5 min-w-[16rem] overflow-hidden text-center sm:min-w-[20rem]">
         <AnimatePresence mode="wait">
           <motion.span
@@ -177,10 +171,9 @@ function NeuralCanvas() {
       window.cancelAnimationFrame(raf);
     };
 
-    const io = new IntersectionObserver(
-      ([entry]) => (entry?.isIntersecting ? start() : stop()),
-      { threshold: 0.02 },
-    );
+    const io = new IntersectionObserver(([entry]) => (entry?.isIntersecting ? start() : stop()), {
+      threshold: 0.02,
+    });
     io.observe(canvas);
 
     const onMove = (e: MouseEvent) => {
@@ -211,11 +204,7 @@ function NeuralCanvas() {
   }, []);
 
   return (
-    <canvas
-      ref={ref}
-      aria-hidden="true"
-      className="absolute inset-0 h-full w-full opacity-70"
-    />
+    <canvas ref={ref} aria-hidden="true" className="absolute inset-0 h-full w-full opacity-70" />
   );
 }
 
@@ -332,7 +321,11 @@ export function Hero() {
       <NeuralCanvas />
 
       {/* Cursor spotlight */}
-      <div ref={spotlightRef} aria-hidden="true" className="hero-spotlight pointer-events-none absolute inset-0" />
+      <div
+        ref={spotlightRef}
+        aria-hidden="true"
+        className="hero-spotlight pointer-events-none absolute inset-0"
+      />
 
       {/* Top meta row */}
       <div className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-4 pt-24 sm:px-6 md:pt-28">

@@ -62,10 +62,12 @@ export function Contact() {
     return () => io.disconnect();
   }, []);
 
-  const set = (key: keyof ContactValues) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setValues((v) => ({ ...v, [key]: e.target.value }));
-    setErrors((prev) => ({ ...prev, [key]: undefined }));
-  };
+  const set =
+    (key: keyof ContactValues) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setValues((v) => ({ ...v, [key]: e.target.value }));
+      setErrors((prev) => ({ ...prev, [key]: undefined }));
+    };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,7 +127,10 @@ export function Contact() {
           <div className="flex flex-col">
             <p className="font-mono text-sm text-foreground/90">
               {typed}
-              <span className="terminal-caret ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-accent" aria-hidden="true" />
+              <span
+                className="terminal-caret ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-accent"
+                aria-hidden="true"
+              />
             </p>
 
             <div className="mt-10 space-y-5">
@@ -170,7 +175,10 @@ export function Contact() {
           {/* Form */}
           <form onSubmit={onSubmit} noValidate className="space-y-4">
             <div>
-              <label htmlFor="contact-name" className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+              <label
+                htmlFor="contact-name"
+                className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground"
+              >
                 Name
               </label>
               <input
@@ -186,7 +194,10 @@ export function Contact() {
             </div>
 
             <div>
-              <label htmlFor="contact-email" className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+              <label
+                htmlFor="contact-email"
+                className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground"
+              >
                 Email
               </label>
               <input
@@ -202,7 +213,10 @@ export function Contact() {
             </div>
 
             <div>
-              <label htmlFor="contact-message" className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+              <label
+                htmlFor="contact-message"
+                className="font-mono text-[11px] uppercase tracking-[0.25em] text-muted-foreground"
+              >
                 Message
               </label>
               <textarea

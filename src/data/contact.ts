@@ -1,4 +1,4 @@
-export const contactLabel = "10 — Open a channel";
+export const contactLabel = "08 — Open a channel";
 export const contactHeading = {
   normal: "Have an idea worth",
   accent: "building?",
