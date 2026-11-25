@@ -4,7 +4,40 @@ import { projects, projectsHeading, projectsLabel, projectsSubtext } from "@/dat
 import { site } from "@/data/site";
 import { Section, SectionHeader } from "./section-header";
 
-function ProjectVisual({ title, tint, code }: { title: string; tint: number; code: string }) {
+function ProjectVisual({
+  title,
+  tint,
+  code,
+  image,
+}: {
+  title: string;
+  tint: number;
+  code: string;
+  image?: string | undefined;
+}) {
+  if (image) {
+    return (
+      <div className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-2xl border border-border bg-background/80">
+        <img
+          src={image}
+          alt={`${title} screenshot`}
+          loading="lazy"
+          className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-70"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute bottom-4 right-4 rounded-full border border-border bg-background/80 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.25em] text-foreground/80 backdrop-blur-md"
+        >
+          {code}
+        </span>
+      </div>
+    );
+  }
+
   const initials = title
     .split(" ")
     .slice(0, 2)
@@ -113,7 +146,12 @@ function ProjectCard({ project, index }: { project: (typeof projects)[number]; i
             </div>
           </div>
 
-          <ProjectVisual title={project.title} tint={project.tint} code={project.code} />
+          <ProjectVisual
+            title={project.title}
+            tint={project.tint}
+            code={project.code}
+            image={project.image}
+          />
         </div>
       </motion.article>
     </div>

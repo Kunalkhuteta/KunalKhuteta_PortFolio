@@ -1,3 +1,6 @@
+import focusTrackerImg from "@/assets/project-focus-tracker.jpg";
+import workflowPlatformImg from "@/assets/project-workflow-platform.jpg";
+
 /**
  * Replace `live: null` with the real demo URL when available.
  * Empty URLs hide their buttons entirely — no placeholder badges.
@@ -18,6 +21,7 @@ export type Project = {
   live: string | null;
   github: string | null;
   badge?: string;
+  image?: string;
   tint: number; // hue used for the generated card visual
 };
 
@@ -59,6 +63,7 @@ export const projects: Project[] = [
     ],
     live: null, // TODO: LIVE_DEMO_URL
     github: null, // TODO: AI_PLATFORM_REPO_URL
+    image: workflowPlatformImg,
     tint: 128,
   },
   {
@@ -117,6 +122,7 @@ export const projects: Project[] = [
     ],
     live: null,
     github: null, // TODO: EXTENSION_REPO_URL
+    image: focusTrackerImg,
     tint: 38,
   },
   {
